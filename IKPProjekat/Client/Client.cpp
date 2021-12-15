@@ -95,7 +95,7 @@ int main()
 		// Slanje pripremljene poruke zapisane unutar strukture studentInfo
 		//prosledjujemo adresu promenljive student u memoriji, jer se na toj adresi nalaze podaci koje saljemo
 		//kao i velicinu te strukture (jer je to duzina poruke u bajtima)
-		iResult = send(connectSocket, (char*)&data, (int)sizeof(Client), 0);
+		iResult = send(connectSocket, (char*)&data, sizeof(Client), 0);
 
 		// Check result of send function
 		if (iResult == SOCKET_ERROR)

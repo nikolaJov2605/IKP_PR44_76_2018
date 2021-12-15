@@ -75,7 +75,7 @@ int main()
 		&threadID);
 	
 
-	WaitForSingleObject(hThread, INFINITE);
+	
 
 
 
@@ -244,7 +244,7 @@ int main()
 				// Check if new message is received from client on position "i"
 				if (FD_ISSET(clientSockets[i], &readfds))
 				{
-					iResult = recv(clientSockets[i], dataBuffer, BUFFER_SIZE, 0);
+					iResult = recv(clientSockets[i], dataBuffer, sizeof(Client), 0);
 
 					if (iResult > 0)
 					{
