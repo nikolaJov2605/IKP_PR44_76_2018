@@ -251,21 +251,26 @@ int main()
 						dataBuffer[iResult] = '\0';
 						printf("Message received from client (%d):\n", i + 1);
 
-						//primljenoj poruci u memoriji pristupiti preko pokazivaca tipa (studentInfo *)
-						//jer znamo format u kom je poruka poslata a to je struct studentInfo
+
 						Client* clientMessage = (Client*)dataBuffer;
 						clientMessage->size =(int) ntohs(clientMessage->size);
 						printf("%d\n", clientMessage->data);
-						//nece da iscita podatke sa adrese!!!
-						for (size_t i = 0; i < clientMessage->size*clientMessage->size; i++)
-						{
-							printf("%f ",  clientMessage->data[i]);
-							if (i % 3 == 0)
-								printf("\n");
 
+						//nece da iscita podatke sa adrese!!!
+
+						
+						for (size_t i = 0; i < 3; i++)
+						{
+							for (size_t j = 0; j < 3; j++)
+							{
+								printf("%f ", clientMessage->data[i+j]);
+								if (i % 3 == 0)
+									printf("\n");
+							}
 						}
+
 						//pustamo semafor da moze da racuna
-						ReleaseSemaphore(hSemaphore, 1, NULL);
+						//ReleaseSemaphore(hSemaphore, 1, NULL);
 
 						printf("_______________________________  \n");
 

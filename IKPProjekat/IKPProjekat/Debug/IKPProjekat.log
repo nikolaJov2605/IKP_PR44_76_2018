@@ -1,4 +1,5 @@
 ﻿  Server.cpp
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\IKPProjekat\Server.cpp(259,14): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'float *'
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\IKPProjekat\Server.cpp(261,28): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Common\QueueHeader.h(12,8): warning C4200: nonstandard extension used: zero-sized array in struct/union
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Common\QueueHeader.h(12,8): message : This member will be ignored by a defaulted constructor or copy/move assignment operator
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\IKPProjekat\Server.cpp(257,14): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'float *'
   IKPProjekat.vcxproj -> C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Debug\Server.exe

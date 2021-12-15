@@ -65,27 +65,56 @@ int main()
 	}
 
 	//promenljiva tipa studentInfo cija ce se polja popunuti i cela struktira poslati u okviru jedne poruke
-	
-
+	Sleep(3000);
 	while (true)
 	{
 		// Unos potrebnih podataka koji ce se poslati serveru
-		Client data;
+		Client* data = (Client*)malloc(sizeof(data)+sizeof(float)*9);
 
 		printf("Unesite dim matrice \n");
-		scanf_s("%d", &data.size);
-		float matrix[3][3];
-		float da;
-		for (size_t i = 0; i < data.size ;i++)
+		//scanf_s("%d", &data.size);
+		data->size = htonf(3);
+		char matrix[3][3] = { {'1','2','3'},{'4','5','6'},{'7','8','9'}};
+		float matrix1[3][3] = { {1,2,3},{4,5,6},{7,8,9} };
+		int counter = 0;
+		for (size_t i = 0; i < 3; i++)
 		{
-			for (size_t j = 0; j < data.size; j++)
+			for (size_t j = 0; j < 3; j++)
 			{
-				scanf_s("%f", &matrix[i][j]);
+				data->data[i+j] = counter;
+				counter++;
 			}
+
 		}
-		data.data = (float*)matrix;
-		printf("%d , %d", &matrix, data.data);
-		data.size = htons(data.size);
+		for (size_t i = 0; i < 3; i++)
+		{
+			for (size_t j = 0; j < 3; j++)
+			{
+				printf("%f", data->data[i + j]);
+			}
+
+		}
+		/*for (size_t i = 0; i < 3; i++)
+		{
+			for (size_t j = 0; j < 3; j++)
+			{
+				matrix1[i][j] = ntohf(matrix1[i][j]);
+				printf("%f", matrix1[i][j]);
+			}
+		}*/
+		
+		/*for (size_t i = 0; i < 3 ;i++)
+		{
+			for (size_t j = 0; j < 3; j++)
+			{
+				printf("%f", matrix[i][j]);
+			}
+		}*/
+		
+		
+		
+		printf("\n%d , %d", &matrix);
+		
 
 
 		//obavezna funkcija htons() jer cemo slati podatak tipa short 
@@ -95,7 +124,7 @@ int main()
 		// Slanje pripremljene poruke zapisane unutar strukture studentInfo
 		//prosledjujemo adresu promenljive student u memoriji, jer se na toj adresi nalaze podaci koje saljemo
 		//kao i velicinu te strukture (jer je to duzina poruke u bajtima)
-		iResult = send(connectSocket, (char*)&data, sizeof(Client), 0);
+		iResult = send(connectSocket, (char*)&data, sizeof(data), 0);
 
 		// Check result of send function
 		if (iResult == SOCKET_ERROR)

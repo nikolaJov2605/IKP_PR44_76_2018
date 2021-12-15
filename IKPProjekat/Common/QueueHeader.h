@@ -9,11 +9,11 @@
 
 typedef struct ClientMessage_st {
 	int size;
-	float* data;
+	float data[];
 }Client;
 
 typedef struct ServerPacket_st {
-	struct ClientMessage_st data;
+	struct ClientMessage_st* data;
 	SOCKET socket;
 }Server;
 
