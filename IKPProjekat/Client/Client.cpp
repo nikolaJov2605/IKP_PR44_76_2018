@@ -25,6 +25,7 @@ int main()
 
 	// Buffer we will use to store message
 	char dataBuffer[BUFFER_SIZE];
+	bool valid = false;
 
 	// WSADATA data structure that is to receive details of the Windows Sockets implementation
 	WSADATA wsaData;
@@ -64,67 +65,73 @@ int main()
 		return 1;
 	}
 
-	//promenljiva tipa studentInfo cija ce se polja popunuti i cela struktira poslati u okviru jedne poruke
 	Sleep(3000);
+
+	char raz = ' ';
+
 	while (true)
 	{
+
+		// pripremamo buffer za slanje za upis podataka;
+		dataBuffer[0] = 0;
+
 		// Unos potrebnih podataka koji ce se poslati serveru
-		Client* data = (Client*)malloc(sizeof(data)+sizeof(float)*9);
-
-		printf("Unesite dim matrice \n");
-		//scanf_s("%d", &data.size);
-		data->size = htonf(3);
-		char matrix[3][3] = { {'1','2','3'},{'4','5','6'},{'7','8','9'}};
-		float matrix1[3][3] = { {1,2,3},{4,5,6},{7,8,9} };
-		int counter = 0;
-		for (size_t i = 0; i < 3; i++)
+		int size = 0;
+		while (true)
 		{
-			for (size_t j = 0; j < 3; j++)
-			{
-				data->data[i+j] = counter;
-				counter++;
-			}
+			printf("Unesite dimenziju matrice (maksimalno 99):\n");
 
+			scanf_s("%d", &size);
+			if (size - 100 < 0)
+				break;
+			printf("\nDIMENZIJA MORA BITI MANjA OD 100!");
 		}
-		for (size_t i = 0; i < 3; i++)
-		{
-			for (size_t j = 0; j < 3; j++)
-			{
-				printf("%f", data->data[i + j]);
-			}
 
+		char stringSize[3];
+		_itoa_s(size, stringSize, 10);
+
+		strncat_s(stringSize, &raz, 1);
+
+		strncat_s(dataBuffer, stringSize, strlen(stringSize));
+
+		printf("%s", dataBuffer);
+
+
+		for (size_t i = 0; i < size * size; i++)
+		{
+			int brojac = 0;
+			char number[100];												// string u koji ce se upisivati broj
+			printf("\n%d) ", i + 1);
+			scanf_s("%s", number, 100);
+			for (int j = 0; number[j] != 0; j++)							// provera da li je broj validan
+			{
+				valid = true;
+				if (number[j] < 48 || number[j] > 57)
+				{
+					valid = false;
+					printf("\nPlease insert a valid number!\n");
+					i--;
+					break;
+				}
+				brojac++;
+			}
+			if (valid)
+			{
+				strncat_s(number, &raz, 1);
+				strncat_s(dataBuffer, number, strlen(number));
+			}
 		}
-		/*for (size_t i = 0; i < 3; i++)
-		{
-			for (size_t j = 0; j < 3; j++)
-			{
-				matrix1[i][j] = ntohf(matrix1[i][j]);
-				printf("%f", matrix1[i][j]);
-			}
-		}*/
-		
-		/*for (size_t i = 0; i < 3 ;i++)
-		{
-			for (size_t j = 0; j < 3; j++)
-			{
-				printf("%f", matrix[i][j]);
-			}
-		}*/
-		
-		
-		
-		printf("\n%d , %d", &matrix);
-		
+
+		printf("\nBUFFER: %s", dataBuffer);
 
 
 		//obavezna funkcija htons() jer cemo slati podatak tipa short 
 		getchar();    //pokupiti enter karakter iz bafera tastature
 
 
-		// Slanje pripremljene poruke zapisane unutar strukture studentInfo
 		//prosledjujemo adresu promenljive student u memoriji, jer se na toj adresi nalaze podaci koje saljemo
 		//kao i velicinu te strukture (jer je to duzina poruke u bajtima)
-		iResult = send(connectSocket, (char*)&data, sizeof(data), 0);
+		iResult = send(connectSocket, (char*)dataBuffer, strlen(dataBuffer), 0);
 
 		// Check result of send function
 		if (iResult == SOCKET_ERROR)

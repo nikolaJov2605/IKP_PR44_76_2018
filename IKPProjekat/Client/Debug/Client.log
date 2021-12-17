@@ -1,10 +1,5 @@
 ﻿  Client.cpp
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Common\QueueHeader.h(12,8): warning C4200: nonstandard extension used: zero-sized array in struct/union
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Common\QueueHeader.h(12,8): message : This member will be ignored by a defaulted constructor or copy/move assignment operator
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(84,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(116,10): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'char (*)[3][3]'
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(116,10): warning C4473: 'printf' : not enough arguments passed for format string
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(116,10): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(116,10): message : the missing variadic argument 2 is required by format string '%d'
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(27,7): warning C4101: 'dataBuffer': unreferenced local variable
-  Client.vcxproj -> C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Debug\Client.exe
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Common\QueueHeader.h(13,8): warning C4200: nonstandard extension used: zero-sized array in struct/union
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Common\QueueHeader.h(13,8): message : This member will be ignored by a defaulted constructor or copy/move assignment operator
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(100,24): warning C4018: '<': signed/unsigned mismatch
+  Client.vcxproj -> D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Client.exe

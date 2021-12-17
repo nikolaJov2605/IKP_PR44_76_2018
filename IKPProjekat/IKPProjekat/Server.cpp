@@ -244,7 +244,7 @@ int main()
 				// Check if new message is received from client on position "i"
 				if (FD_ISSET(clientSockets[i], &readfds))
 				{
-					iResult = recv(clientSockets[i], dataBuffer, sizeof(Client), 0);
+					iResult = recv(clientSockets[i], dataBuffer, BUFFER_SIZE, 0);
 
 					if (iResult > 0)
 					{
@@ -252,29 +252,41 @@ int main()
 						printf("Message received from client (%d):\n", i + 1);
 
 
-						Client* clientMessage = (Client*)dataBuffer;
-						clientMessage->size =(int) ntohs(clientMessage->size);
-						printf("%d\n", clientMessage->data);
+						Client* clientMessage = (Client*)malloc(sizeof(Client));
+						//clientMessage->size =(int) ntohs(clientMessage->size);
+						printf("Message recieved: %s\n", dataBuffer);
 
-						//nece da iscita podatke sa adrese!!!
+						char separator = ' ';
+						char* next;
 
-						
-						for (size_t i = 0; i < 3; i++)
+						char* token = strtok_s(dataBuffer, &separator, &next);
+
+						clientMessage->size = atoi(token);							// od prvog elementa niza preuzima dimenziju matrice
+
+						float* matrix_data = (float*)malloc(clientMessage->size * clientMessage->size);
+						int idx = 0;
+						while (strcmp(next, "") != 0)								// od ostalih elemenata pravimo niz
 						{
-							for (size_t j = 0; j < 3; j++)
-							{
-								printf("%f ", clientMessage->data[i+j]);
-								if (i % 3 == 0)
-									printf("\n");
-							}
+							printf("\nTOKEN: %s", next);
+							token = strtok_s(next, &separator, &next);
+							matrix_data[idx] = atof(token);
+							idx++;
 						}
 
+						for (int i = 0; i < clientMessage->size * clientMessage->size; i++)
+						{
+							printf("\n%f", matrix_data[i]);
+						}
+
+						
+						
 						//pustamo semafor da moze da racuna
 						//ReleaseSemaphore(hSemaphore, 1, NULL);
 
 						printf("_______________________________  \n");
 
-
+						//free(matrix_data);
+						//free(clientMessage);
 					}
 					else if (iResult == 0)
 					{
