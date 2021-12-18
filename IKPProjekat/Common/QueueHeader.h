@@ -10,16 +10,20 @@
 
 typedef struct ClientMessage_st {
 	int size;
-	float data[];
+	char* data;
 }Client;
 
+HANDLE hSemaphore;
+HANDLE wSemaphore;
+
 typedef struct ServerPacket_st {
-	struct ClientMessage_st* data;
+	char* data;
 	SOCKET socket;
 }Server;
 
 typedef struct Queue {
-	Server data;
+	char* data;
+	SOCKET socket;
 	struct Queue* next;
 }Queue;
 

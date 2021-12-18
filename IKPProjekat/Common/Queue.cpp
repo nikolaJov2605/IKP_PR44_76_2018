@@ -6,7 +6,8 @@ void initQueue(Queue** head) {
 void EnQueue(Queue** head, Server data) {
 	Queue* newElement = (Queue*)malloc(sizeof(Queue));
 
-	newElement->data =data;
+	newElement->data = data.data;
+	newElement->socket = data.socket;
 	newElement->next = NULL;
 
 	if (*head == NULL) {
@@ -28,10 +29,19 @@ Queue* DeQueue(Queue** head) {
 		return NULL;
 
 	Queue* helper = *head;
-	Queue* data = NULL;
-	data->data = helper->data;
+	Queue* data = (Queue*)malloc(sizeof(Queue));
 
-	(*head)->next = helper->next->next;
+	data->data = helper->data;
+	data->socket = helper->socket;
+	data->next = NULL;
+
+	/*if (helper->next->next==nullptr) {
+		(*head)->next = helper->next;
+	}
+	else {
+		(*head)->next = helper->next->next;
+
+	}*/
 	
 	free(helper);
 

@@ -55,6 +55,10 @@ int main()
 	serverAddress.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);	// ip address of server
 	serverAddress.sin_port = htons(SERVER_PORT);					// server port
 
+
+	Sleep(1000);
+
+
 	// Connect to server specified in serverAddress and socket connectSocket
 	iResult = connect(connectSocket, (SOCKADDR*)&serverAddress, sizeof(serverAddress));
 	if (iResult == SOCKET_ERROR)
@@ -65,7 +69,6 @@ int main()
 		return 1;
 	}
 
-	Sleep(3000);
 
 	char raz = ' ';
 
@@ -77,7 +80,7 @@ int main()
 
 		// Unos potrebnih podataka koji ce se poslati serveru
 		int size = 0;
-		while (true)
+		while (true)// preko do while odraditi
 		{
 			printf("Unesite dimenziju matrice (maksimalno 99):\n");
 
@@ -86,6 +89,8 @@ int main()
 				break;
 			printf("\nDIMENZIJA MORA BITI MANjA OD 100!");
 		}
+
+		
 
 		char stringSize[3];
 		_itoa_s(size, stringSize, 10);
@@ -121,10 +126,9 @@ int main()
 				strncat_s(dataBuffer, number, strlen(number));
 			}
 		}
-
+	
 		printf("\nBUFFER: %s", dataBuffer);
-
-
+		
 		//obavezna funkcija htons() jer cemo slati podatak tipa short 
 		getchar();    //pokupiti enter karakter iz bafera tastature
 

@@ -10,19 +10,49 @@
 #pragma pack(1)
 
 #define SERVER_PORT 27016
+#define SERVER_PORTWorker 27017
 #define BUFFER_SIZE 256
 #define MAX_CLIENTS 5
+#define SERVER_IP_ADDRESS "127.0.0.1"
 
-HANDLE hSemaphore;
+
+int SomethingInqueue(char* data,int n);
+Queue* head = (Queue*)malloc(sizeof(Queue));
+
 
 DWORD WINAPI ThreadProc(LPVOID lpParam)
 {
 	while (true)
 	{
-		/* Cekaj na signal da je pritisnut taster. */
+		/* Cekaj na signal da je stigao  paket. */
 		WaitForSingleObject(hSemaphore, INFINITE);
-		/* Povecaj brojac i ispisi vrednost. */
-		//Zovemo bolida
+		//skidamo sa reda 
+		
+		Queue* deq = DeQueue(&head);
+		const int number = strlen(deq->data);
+		char* data = deq->data;
+		int i = 0;
+		char datas[BUFFER_SIZE];
+		char c;
+		while (deq->data[i] != '\0') {
+			datas[i] = deq->data[i];
+			i++;
+		}
+		//ubacujemo socket u paket
+		char pom[4];
+		printf("\n %d \n", deq->socket);
+		sprintf_s(pom, "%d", deq->socket);
+		for (size_t j = 0; j < 4; j++)
+		{
+			datas[i + j] = pom[j];
+		}
+
+		//prosledjijemo funkciji podatke i duzinu 
+		//ona poziva izvrsioca 
+		int Result = SomethingInqueue(datas,i+4);
+		if (Result != 0) {
+			printf("Some error occupied \n");
+		}
 	}
 }
 
@@ -32,38 +62,9 @@ int main()
 {
 	//Role mora jedna * za matricu jer ako su 2 onda se on pogubi imamo ovako jednu *
 	//iteriramo po elementima skontacemo kasnije
-	Queue* head = (Queue*)malloc(sizeof(Queue));
+	
 	initQueue(&head);
-	//Server data;
-	//float matrix[3][3] = {1,2,3,4,5,6,7,8,9 };
-	//int da = 145;
-	//Client cl;
-
-	//cl.data = (float*)matrix;
-	//cl.size = 3;
-	///*for (size_t i = 1; i <= 9; i++)
-	//{
-	//		printf("%f ", (float)cl.data[i-1]);
-	//	if(i%3==0 )
-	//		printf("\n");
-
-	//}*/
-	//data.data = cl;
-
-	//for (size_t i = 1; i <= 9; i++)
-	//{
-	//	printf("%f ", (float)data.data.data[i - 1]);
-	//	if (i % 3 == 0)
-	//		printf("\n");
-
-	//}
-
-	//printf("Hello \n");
-	//for (int i = 0; i < 3; i++) {
-	//	EnQueue(&head, data);
-	//}
-	//printf("Ovde");
-	//printf("Queue count %d \n", NumberOfElements(head));
+	
 	//kasnije ovo obrisati jer je bilo samo za proveru :D
 	// Socket used for listening for new clients 
 
@@ -73,11 +74,6 @@ int main()
 	hSemaphore = CreateSemaphore(0, 0, 10, NULL);
 	hThread = CreateThread(NULL, 0, &ThreadProc, NULL, 0,
 		&threadID);
-	
-
-	
-
-
 
 	SOCKET listenSocket = INVALID_SOCKET;
 
@@ -251,37 +247,18 @@ int main()
 						dataBuffer[iResult] = '\0';
 						printf("Message received from client (%d):\n", i + 1);
 
-
-						Client* clientMessage = (Client*)malloc(sizeof(Client));
-						//clientMessage->size =(int) ntohs(clientMessage->size);
-						printf("Message recieved: %s\n", dataBuffer);
-
-						char separator = ' ';
-						char* next;
-
-						char* token = strtok_s(dataBuffer, &separator, &next);
-
-						clientMessage->size = atoi(token);							// od prvog elementa niza preuzima dimenziju matrice
-
-						float* matrix_data = (float*)malloc(clientMessage->size * clientMessage->size);
-						int idx = 0;
-						while (strcmp(next, "") != 0)								// od ostalih elemenata pravimo niz
-						{
-							printf("\nTOKEN: %s", next);
-							token = strtok_s(next, &separator, &next);
-							matrix_data[idx] = atof(token);
-							idx++;
-						}
-
-						for (int i = 0; i < clientMessage->size * clientMessage->size; i++)
-						{
-							printf("\n%f", matrix_data[i]);
-						}
-
 						
 						
-						//pustamo semafor da moze da racuna
-						//ReleaseSemaphore(hSemaphore, 1, NULL);
+						
+						ServerPacket_st packet;
+						packet.data = dataBuffer;
+						packet.socket = clientSockets[i];
+
+						//ubacujem u red naz serverski paket
+						EnQueue(&head, packet);
+
+						//pustamo semafor da mozemo da posaljemo zahtev izvrsiocu
+						ReleaseSemaphore(hSemaphore, 1, NULL);
 
 						printf("_______________________________  \n");
 
@@ -343,5 +320,52 @@ int main()
 	// Deinitialize WSA library
 	WSACleanup();
 
+	return 0;
+}
+
+
+int SomethingInqueue(char* data,int num) {
+	SOCKET connectSocket = INVALID_SOCKET;
+
+	// Variable used to store function return value
+	int iResult;
+
+	// create a socket
+	connectSocket = socket(AF_INET,
+		SOCK_STREAM,
+		IPPROTO_TCP);
+
+	if (connectSocket == INVALID_SOCKET)
+	{
+		printf("socket failed with error: %ld\n", WSAGetLastError());
+		WSACleanup();
+		return 1;
+	}
+
+	// Create and initialize address structure
+	sockaddr_in serverAddress;
+	serverAddress.sin_family = AF_INET;								// IPv4 protocol
+	serverAddress.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);	// ip address of server
+	serverAddress.sin_port = htons(SERVER_PORTWorker);					// server port
+
+	// Connect to server specified in serverAddress and socket connectSocket
+	iResult = connect(connectSocket, (SOCKADDR*)&serverAddress, sizeof(serverAddress));
+	if (iResult == SOCKET_ERROR)
+	{
+		printf("Unable to connect to server.\n");
+		closesocket(connectSocket);
+		WSACleanup();
+		return 1;
+	}
+	iResult = send(connectSocket, (char*)data, num, 0);
+
+	// Check result of send function
+	if (iResult == SOCKET_ERROR)
+	{
+		printf("send failed with error: %d\n", WSAGetLastError());
+		closesocket(connectSocket);
+		WSACleanup();
+		return 1;
+	}
 	return 0;
 }

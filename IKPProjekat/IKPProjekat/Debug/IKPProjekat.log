@@ -1,5 +1,3 @@
 ﻿  Server.cpp
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Common\QueueHeader.h(13,8): warning C4200: nonstandard extension used: zero-sized array in struct/union
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Common\QueueHeader.h(13,8): message : This member will be ignored by a defaulted constructor or copy/move assignment operator
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\IKPProjekat\Server.cpp(272,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  IKPProjekat.vcxproj -> D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Server.exe
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\IKPProjekat\Server.cpp(36,8): warning C4101: 'c': unreferenced local variable
+  IKPProjekat.vcxproj -> C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Debug\Server.exe
