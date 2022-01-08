@@ -149,8 +149,8 @@ int main()
 		printf("Message successfully sent. Total bytes: %ld\n", iResult);
 
 		memset(dataBuffer, 0, sizeof(dataBuffer));
-
-		iResult = recv(connectSocket, (char*)dataBuffer, strlen(dataBuffer), 0);
+		
+		iResult = recv(connectSocket, (char*)dataBuffer, BUFFER_SIZE, 0);
 		if (iResult == SOCKET_ERROR)
 		{
 			printf("send failed with error: %d\n", WSAGetLastError());
