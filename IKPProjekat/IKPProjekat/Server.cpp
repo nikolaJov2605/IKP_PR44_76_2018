@@ -15,13 +15,19 @@
 #define MAX_CLIENTS 5
 #define SERVER_IP_ADDRESS "127.0.0.1"
 
+int run_process(char* parameters);
 
-int SomethingInqueue(char* data,int n);
+int SendResultToClient(char* data,int n, SOCKET clientSocket);
 Queue* head = (Queue*)malloc(sizeof(Queue));
 
 
 DWORD WINAPI ThreadProc(LPVOID lpParam)
 {
+	int k = 0;		// iterator;
+	char size[3];
+	char num[20];
+	int arrIdx = -1;	//indeks u data gde pocinje niz
+	bool collectedSize = false;
 	while (true)
 	{
 		/* Cekaj na signal da je stigao  paket. */
@@ -46,13 +52,59 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		{
 			datas[i + j] = pom[j];
 		}
+		printf("\nDATA: %s", data);
+
+		SOCKET clientSocket = (SOCKET)deq->socket;
 
 		//prosledjijemo funkciji podatke i duzinu 
-		//ona poziva izvrsioca 
-		int Result = SomethingInqueue(datas,i+4);
+		//ona poziva izvrsioca
+
+
+		while (data[k] != '\0')
+		{
+			if (data[k] == ' ')
+			{
+				if (!collectedSize)
+				{
+					arrIdx = k + 1;
+					for (int j = 0; j < k; j++)
+					{
+						size[j] = data[j];
+					}
+					collectedSize = true;
+					break;
+				}
+			}
+			k++;
+		}
+		
+		int matrix_size = atoi(size);
+		int arrCount = pow(matrix_size, 2);
+		printf("\nDIMENZIJA: %d", matrix_size);
+		printf("\nELEMENATA: %d", arrCount);
+		int nizIt = 0;
+		int* niz = new int[arrCount];
+
+		char* params = data + arrIdx;
+
+		printf("\nPARAMS: %s", params);
+
+		int result = run_process(params);
+
+		printf("\nREZULTAT: %d", result);
+
+		char buffer[30];
+		_itoa_s(result, buffer, sizeof(buffer), 10);
+		int num = strlen(buffer);
+
+		printf("\nNUM: %d", num);
+
+
+		int Result = SendResultToClient(datas, i + 4, clientSocket);
 		if (Result != 0) {
 			printf("Some error occupied \n");
 		}
+		delete[] niz;
 	}
 }
 
@@ -247,7 +299,7 @@ int main()
 						dataBuffer[iResult] = '\0';
 						printf("Message received from client (%d):\n", i + 1);
 
-						
+						printf("%s", dataBuffer);
 						
 						
 						ServerPacket_st packet;
@@ -324,16 +376,16 @@ int main()
 }
 
 
-int SomethingInqueue(char* data,int num) {
-	SOCKET connectSocket = INVALID_SOCKET;
+int SendResultToClient(char* data, int num, SOCKET clientSocket) {
+	SOCKET connectSocket = clientSocket;
 
 	// Variable used to store function return value
 	int iResult;
 
 	// create a socket
-	connectSocket = socket(AF_INET,
+	/*connectSocket = socket(AF_INET,
 		SOCK_STREAM,
-		IPPROTO_TCP);
+		IPPROTO_TCP);*/
 
 	if (connectSocket == INVALID_SOCKET)
 	{
@@ -343,7 +395,7 @@ int SomethingInqueue(char* data,int num) {
 	}
 
 	// Create and initialize address structure
-	sockaddr_in serverAddress;
+	/*sockaddr_in serverAddress;
 	serverAddress.sin_family = AF_INET;								// IPv4 protocol
 	serverAddress.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);	// ip address of server
 	serverAddress.sin_port = htons(SERVER_PORTWorker);					// server port
@@ -356,7 +408,7 @@ int SomethingInqueue(char* data,int num) {
 		closesocket(connectSocket);
 		WSACleanup();
 		return 1;
-	}
+	}*/
 	iResult = send(connectSocket, (char*)data, num, 0);
 
 	// Check result of send function
@@ -368,4 +420,54 @@ int SomethingInqueue(char* data,int num) {
 		return 1;
 	}
 	return 0;
+}
+
+
+int run_process(char* parameters)
+{
+	// da bi struktura primila parametre za poziv procesa, potrebno ih je konvertovati u odgovarajuci tip
+	const WCHAR* params; //LPCWSTR
+
+	//int size = MultiByteToWideChar(CP_ACP, 0, parameters, -1, NULL, 0);
+
+	int s = strlen(parameters);
+
+	params = new WCHAR[s];
+	MultiByteToWideChar(CP_ACP, 0, parameters, -1, (LPWSTR)params, s);
+
+
+
+	// kreiramo i popunjavamo strukturu procesa
+	SHELLEXECUTEINFO ShExecInfo = { 0 };
+	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+	ShExecInfo.hwnd = NULL;
+	ShExecInfo.lpVerb = L"open";
+	ShExecInfo.lpFile = L"D:\\Fakultet\\IV godina\\I semestar\\Projekti\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
+	ShExecInfo.lpParameters = params;
+	ShExecInfo.lpDirectory = NULL;
+	ShExecInfo.nShow = SW_SHOW;
+	ShExecInfo.hInstApp = NULL;
+	if (ShellExecuteExW(&ShExecInfo) == false)
+	{
+		printf("\nError %d\n", WSAGetLastError());
+		return WSAGetLastError();
+	}
+
+	delete[] params;
+
+	WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+
+	DWORD output = -1;
+	bool success = GetExitCodeProcess(ShExecInfo.hProcess, &output);
+	if (!success) {
+		printf("\nProces exit code error: %d", GetLastError());
+	}
+
+	CloseHandle(ShExecInfo.hProcess);
+
+	//ExitProcess(-1);
+	//exit(output);
+
+	return output;
 }

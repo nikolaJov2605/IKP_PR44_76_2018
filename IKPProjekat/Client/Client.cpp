@@ -148,6 +148,21 @@ int main()
 
 		printf("Message successfully sent. Total bytes: %ld\n", iResult);
 
+		memset(dataBuffer, 0, sizeof(dataBuffer));
+
+		iResult = recv(connectSocket, (char*)dataBuffer, strlen(dataBuffer), 0);
+		if (iResult == SOCKET_ERROR)
+		{
+			printf("send failed with error: %d\n", WSAGetLastError());
+			closesocket(connectSocket);
+			WSACleanup();
+			return 1;
+		}
+
+		dataBuffer[iResult] = '\0';
+		printf("\n\nDET = %s", dataBuffer);
+
+
 		printf("\nPress 'x' to exit or any other key to continue: ");
 		if (_getch() == 'x')
 			break;

@@ -1,5 +1,1 @@
-﻿  Workers.cpp
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(226,31): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(31,9): warning C4101: 'hThread': unreferenced local variable
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(30,8): warning C4101: 'threadID': unreferenced local variable
-  Workers.vcxproj -> C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Debug\Workers.exe
+﻿

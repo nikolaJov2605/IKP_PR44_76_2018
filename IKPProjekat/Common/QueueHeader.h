@@ -1,12 +1,15 @@
 #pragma once
 
 #include <windows.h>
+#pragma comment(lib, "SHELL32.LIB")
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "conio.h"
+#include <math.h>
+#include <shellapi.h>
 
 typedef struct ClientMessage_st {
 	int size;
