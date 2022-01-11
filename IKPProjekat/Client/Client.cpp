@@ -14,6 +14,10 @@
 #define BUFFER_SIZE 256
 
 
+char* input_matrix(int size);
+char* generate_random_matrix(int size);
+/*int run_stres_test(SOCKET connectSocket);*/
+
 // TCP client that use non-blocking sockets
 int main()
 {
@@ -24,7 +28,7 @@ int main()
 	int iResult;
 
 	// Buffer we will use to store message
-	char dataBuffer[BUFFER_SIZE];
+	char* dataBuffer = new char[BUFFER_SIZE];
 	bool valid = false;
 
 	// WSADATA data structure that is to receive details of the Windows Sockets implementation
@@ -70,68 +74,68 @@ int main()
 	}
 
 
-	char raz = ' ';
 
 	while (true)
 	{
-
-		// pripremamo buffer za slanje za upis podataka;
-		dataBuffer[0] = 0;
-
-		// Unos potrebnih podataka koji ce se poslati serveru
+		char* tempBuffer = NULL;
 		int size = 0;
-		while (true)// preko do while odraditi
-		{
-			printf("Unesite dimenziju matrice (maksimalno 99):\n");
+		int res = 0;
+		// pripremamo buffer za slanje za upis podataka;
+		//dataBuffer[0] = 0;
+		//memcpy(dataBuffer, 0, BUFFER_SIZE);
+		// Unos potrebnih podataka koji ce se poslati serveru
+		char unos;
 
+		printf("\n1 - Izracunaj matricu\n");
+		printf("2 - Generisi random matricu\n");
+		printf("3 - Pokreni stres test\n");
+		printf(" -> ");
+		scanf_s("%c", &unos);
+
+		switch (unos)
+		{
+		case '1':
+			printf("Unesite dimenziju matrice (maksimalno 99):\n");
 			scanf_s("%d", &size);
 			if (size - 100 < 0)
+			{
+				tempBuffer = input_matrix(size);
+				printf("\nUNETO: %s", tempBuffer);
 				break;
-			printf("\nDIMENZIJA MORA BITI MANjA OD 100!");
+			}
+			else
+			{
+				printf("\nDIMENZIJA MORA BITI MANjA OD 100!");
+				continue;
+			}
+			break;
+		case '2':
+			printf("Unesite dimenziju matrice (maksimalno 99):\n");
+			scanf_s("%d", &size);
+			if (size - 100 < 0)
+			{
+				tempBuffer = generate_random_matrix(size);
+				printf("\nUNETO: %s", tempBuffer);
+				break;
+			}
+			else
+			{
+				printf("\nDIMENZIJA MORA BITI MANjA OD 100!");
+				continue;
+			}
+			break;
+		case '3':
+			//res = run_stres_test(connectSocket);
+			break;
+		default:
+			printf("\nPogresan unos!");
+			break;
 		}
 
-		
+		if (tempBuffer != NULL)
+			memcpy(dataBuffer, tempBuffer, BUFFER_SIZE);
 
-		char stringSize[3];
-		_itoa_s(size, stringSize, 10);
-
-		strncat_s(stringSize, &raz, 1);
-
-		strncat_s(dataBuffer, stringSize, strlen(stringSize));
-
-		printf("%s", dataBuffer);
-
-
-		for (size_t i = 0; i < size * size; i++)
-		{
-			int brojac = 0;
-			char number[100];												// string u koji ce se upisivati broj
-			printf("\n%d) ", i + 1);
-			scanf_s("%s", number, 100);
-			for (int j = 0; number[j] != 0; j++)							// provera da li je broj validan
-			{
-				valid = true;
-				if (number[j] < 48 || number[j] > 57)
-				{
-					valid = false;
-					printf("\nPlease insert a valid number!\n");
-					i--;
-					break;
-				}
-				brojac++;
-			}
-			if (valid)
-			{
-				strncat_s(number, &raz, 1);
-				strncat_s(dataBuffer, number, strlen(number));
-			}
-		}
-	
-		printf("\nBUFFER: %s", dataBuffer);
-		
-		//obavezna funkcija htons() jer cemo slati podatak tipa short 
-		getchar();    //pokupiti enter karakter iz bafera tastature
-
+		free(tempBuffer);
 
 		//prosledjujemo adresu promenljive student u memoriji, jer se na toj adresi nalaze podaci koje saljemo
 		//kao i velicinu te strukture (jer je to duzina poruke u bajtima)
@@ -148,8 +152,8 @@ int main()
 
 		printf("Message successfully sent. Total bytes: %ld\n", iResult);
 
-		memset(dataBuffer, 0, sizeof(dataBuffer));
-		
+		memset(dataBuffer, 0, BUFFER_SIZE);
+
 		iResult = recv(connectSocket, (char*)dataBuffer, BUFFER_SIZE, 0);
 		if (iResult == SOCKET_ERROR)
 		{
@@ -185,8 +189,141 @@ int main()
 	// Close connected socket
 	closesocket(connectSocket);
 
+	delete[] dataBuffer;
+
 	// Deinitialize WSA library
 	WSACleanup();
 
 	return 0;
 }
+
+
+char* input_matrix(int size)
+{
+	bool valid = false;
+	char raz = ' ';
+	char stringSize[3];
+	char dataBuffer[BUFFER_SIZE];
+	char* retBuffer = (char*)malloc(BUFFER_SIZE);
+	_itoa_s(size, stringSize, 10);
+
+	strncat_s(stringSize, &raz, 1);
+	dataBuffer[0] = 0;
+	retBuffer[0] = 0;
+	strncat_s(dataBuffer, stringSize, strlen(stringSize));
+
+	printf("%s", dataBuffer);
+
+
+	for (size_t i = 0; i < size * size; i++)
+	{
+		int brojac = 0;
+		char number[100];												// string u koji ce se upisivati broj
+		printf("\n%d) ", i + 1);
+		scanf_s("%s", number, 100);
+		for (int j = 0; number[j] != 0; j++)							// provera da li je broj validan
+		{
+			valid = true;
+			if (number[j] < 48 || number[j] > 57)
+			{
+				valid = false;
+				printf("\nPlease insert a valid number!\n");
+				i--;
+				break;
+			}
+			brojac++;
+		}
+		if (valid)
+		{
+			strncat_s(number, &raz, 1);
+			strncat_s(dataBuffer, number, strlen(number));
+		}
+	}
+
+	printf("\nBUFFER: %s", dataBuffer);
+
+	memcpy(retBuffer, dataBuffer, BUFFER_SIZE);
+
+	return retBuffer;
+}
+
+
+char* generate_random_matrix(int size)
+{
+	char stringSize[3];
+	char dataBuffer[BUFFER_SIZE];
+	char* retBuffer = (char*)malloc(BUFFER_SIZE);
+	_itoa_s(size, stringSize, 10);
+	char raz = ' ';
+	int* niz = new int[pow(size, 2)];
+
+	strncat_s(stringSize, &raz, 1);
+	dataBuffer[0] = 0;
+	retBuffer[0] = 0;
+	strncat_s(dataBuffer, stringSize, strlen(stringSize));
+	char converted[10];
+
+	srand(time(0));
+	printf("\n");
+	for (int i = 0; i < pow(size, 2); i++)
+	{
+		niz[i] = rand() % 200 + 1;
+		printf("%d ", niz[i]);
+		_itoa_s(niz[i], converted, 10);
+
+		strncat_s(converted, &raz, 1);
+		strncat_s(dataBuffer, converted, strlen(converted));
+		memset(converted, 0, 4);
+	}
+
+	memcpy(retBuffer, dataBuffer, BUFFER_SIZE);
+
+	return retBuffer;
+}
+
+
+
+/*int run_stres_test(SOCKET connectSocket)
+{
+	srand(time(0));
+	char* sendingBuffer;
+	int iResult;
+	int result = 0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		int size = rand() % 5 + 2;
+		sendingBuffer = generate_random_matrix(size);
+
+		iResult = send(connectSocket, (char*)sendingBuffer, strlen(sendingBuffer), 0);
+
+		if (iResult == SOCKET_ERROR)
+		{
+			printf("send failed with error: %d\n", WSAGetLastError());
+			closesocket(connectSocket);
+			WSACleanup();
+			return 1;
+		}
+
+		printf("Message successfully sent. Total bytes: %ld\n", iResult);
+
+		free(sendingBuffer);
+		memset(sendingBuffer, 0, 2048);
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		memset(sendingBuffer, 0, 2048);
+		iResult = recv(connectSocket, (char*)sendingBuffer, BUFFER_SIZE, 0);
+		if (iResult == SOCKET_ERROR)
+		{
+			printf("send failed with error: %d\n", WSAGetLastError());
+			closesocket(connectSocket);
+			WSACleanup();
+			return 1;
+		}
+
+		sendingBuffer[iResult] = '\0';
+		printf("\n\nDET = %s", sendingBuffer);
+	}
+}*/

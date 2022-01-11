@@ -379,13 +379,7 @@ int main()
 int SendResultToClient(char* data, int num, SOCKET clientSocket) {
 	SOCKET connectSocket = clientSocket;
 
-	// Variable used to store function return value
 	int iResult;
-
-	// create a socket
-	/*connectSocket = socket(AF_INET,
-		SOCK_STREAM,
-		IPPROTO_TCP);*/
 
 	if (connectSocket == INVALID_SOCKET)
 	{
@@ -394,24 +388,8 @@ int SendResultToClient(char* data, int num, SOCKET clientSocket) {
 		return 1;
 	}
 
-	// Create and initialize address structure
-	/*sockaddr_in serverAddress;
-	serverAddress.sin_family = AF_INET;								// IPv4 protocol
-	serverAddress.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);	// ip address of server
-	serverAddress.sin_port = htons(SERVER_PORTWorker);					// server port
-
-	// Connect to server specified in serverAddress and socket connectSocket
-	iResult = connect(connectSocket, (SOCKADDR*)&serverAddress, sizeof(serverAddress));
-	if (iResult == SOCKET_ERROR)
-	{
-		printf("Unable to connect to server.\n");
-		closesocket(connectSocket);
-		WSACleanup();
-		return 1;
-	}*/
 	iResult = send(connectSocket, (char*)data, num, 0);
 
-	// Check result of send function
 	if (iResult == SOCKET_ERROR)
 	{
 		printf("send failed with error: %d\n", WSAGetLastError());
@@ -435,7 +413,8 @@ int run_process(char* parameters)
 	params = new WCHAR[s];
 	MultiByteToWideChar(CP_ACP, 0, parameters, -1, (LPWSTR)params, s);
 
-
+	//char canePath[110] = "C:\\Users\\TUF\\Desktop\\ProjektiSemestar1\\IKPProjekat\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
+	//char jolePath[100] = "D:\\Fakultet\\IV godina\\I semestar\\Projekti\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
 
 	// kreiramo i popunjavamo strukturu procesa
 	SHELLEXECUTEINFO ShExecInfo = { 0 };
@@ -443,7 +422,7 @@ int run_process(char* parameters)
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 	ShExecInfo.hwnd = NULL;
 	ShExecInfo.lpVerb = L"open";
-	ShExecInfo.lpFile = L"C:\\Users\\TUF\\Desktop\\ProjektiSemestar1\\IKPProjekat\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
+	ShExecInfo.lpFile = L"D:\\Fakultet\\IV godina\\I semestar\\Projekti\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
 	ShExecInfo.lpParameters = params;
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;

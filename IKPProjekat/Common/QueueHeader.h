@@ -10,6 +10,7 @@
 #include "conio.h"
 #include <math.h>
 #include <shellapi.h>
+#include <time.h>
 
 typedef struct ClientMessage_st {
 	int size;
