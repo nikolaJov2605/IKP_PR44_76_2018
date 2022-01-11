@@ -1,5 +1,1 @@
-﻿  Server.cpp
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\IKPProjekat\Server.cpp(82,16): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\IKPProjekat\Server.cpp(28,7): warning C4101: 'num': unreferenced local variable
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\IKPProjekat\Server.cpp(42,8): warning C4101: 'c': unreferenced local variable
-  IKPProjekat.vcxproj -> D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Server.exe
+﻿  IKPProjekat.vcxproj -> C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Debug\Server.exe

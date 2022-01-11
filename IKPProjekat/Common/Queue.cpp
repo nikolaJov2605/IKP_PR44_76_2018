@@ -16,13 +16,14 @@ void EnQueue(Queue** head, Server data) {
 		*head = newElement;
 		return;
 	}
+	
 
-	Queue* helper = *head;
-	while (helper->next != NULL) {
-		helper = helper->next;
+	Queue* temp = *head;
+	while (temp->next != NULL) {
+		temp = temp->next;
 	}
 
-	helper->next = newElement;
+	temp->next = newElement;
 
 }
 Queue* DeQueue(Queue** head) {
@@ -37,26 +38,61 @@ Queue* DeQueue(Queue** head) {
 	data->socket = helper->socket;
 	data->next = NULL;
 
-	/*if (helper->next->next==nullptr) {
-		(*head)->next = helper->next;
-	}
-	else {
-		(*head)->next = helper->next->next;
-
-	}*/
 	
 	free(helper);
 
 	return data;
 }
-int NumberOfElements(Queue* head) {
-	if (head == NULL)
-		return 0;
 
-	int counter = 1;
-	while (head->next != NULL) {
-		head = head->next;
-		counter++;
-	}
-	return counter;
+
+/* Create an empty queue */
+void initialize() {
+    front = back = NULL;
+}
+
+/*
+Adding elements in Queue
+*/
+void enqueue(node** head, Server data) {
+	node* newElement = (node*)malloc(sizeof(node));
+
+	newElement->data = data.data;
+	newElement->socket = data.socket;
+	newElement->next = NULL;
+
+
+    if (back == NULL) {
+        front = back = newElement;
+    }
+    else {
+        back->next = newElement;
+    }
+}
+
+/*
+Removes an element from front of the queue
+*/
+void dequeue() {
+
+	node* data = (node*)malloc(sizeof(node));
+	
+	
+    if (front == NULL) {
+        printf("\nQueue is Empty \n");
+        return;
+    }
+    else {
+        data = front;
+        front = front->next;
+        if (front == NULL) {
+            back = NULL;
+        }
+		//free(data);
+    }
+}
+node* frontelement() {
+	if ((front != NULL) && (back != NULL))
+		return front;
+	else
+		return 0;
 }

@@ -114,7 +114,6 @@ int main()
 {
 	//Role mora jedna * za matricu jer ako su 2 onda se on pogubi imamo ovako jednu *
 	//iteriramo po elementima skontacemo kasnije
-	
 	initQueue(&head);
 	
 	//kasnije ovo obrisati jer je bilo samo za proveru :D
@@ -214,7 +213,7 @@ int main()
 
 	// timeout for select function
 	timeval timeVal;
-	timeVal.tv_sec = 5;
+	timeVal.tv_sec = 1;
 	timeVal.tv_usec = 0;
 	sockaddr_in clientAddr[MAX_CLIENTS];
 	memset(clientAddr, 0, MAX_CLIENTS * sizeof(sockaddr_in));
@@ -387,7 +386,7 @@ int SendResultToClient(char* data, int num, SOCKET clientSocket) {
 		WSACleanup();
 		return 1;
 	}
-
+	Sleep(100);
 	iResult = send(connectSocket, (char*)data, num, 0);
 
 	if (iResult == SOCKET_ERROR)
@@ -422,11 +421,12 @@ int run_process(char* parameters)
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 	ShExecInfo.hwnd = NULL;
 	ShExecInfo.lpVerb = L"open";
-	ShExecInfo.lpFile = L"D:\\Fakultet\\IV godina\\I semestar\\Projekti\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
+	ShExecInfo.lpFile = L"C:\\Users\\TUF\\Desktop\\ProjektiSemestar1\\IKPProjekat\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
 	ShExecInfo.lpParameters = params;
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL;
+
 	if (ShellExecuteExW(&ShExecInfo) == false)
 	{
 		printf("\nError %d\n", WSAGetLastError());

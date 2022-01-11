@@ -16,7 +16,7 @@
 
 char* input_matrix(int size);
 char* generate_random_matrix(int size);
-/*int run_stres_test(SOCKET connectSocket);*/
+int run_stres_test();
 
 // TCP client that use non-blocking sockets
 int main()
@@ -46,6 +46,7 @@ int main()
 		SOCK_STREAM,
 		IPPROTO_TCP);
 
+
 	if (connectSocket == INVALID_SOCKET)
 	{
 		printf("socket failed with error: %ld\n", WSAGetLastError());
@@ -60,8 +61,7 @@ int main()
 	serverAddress.sin_port = htons(SERVER_PORT);					// server port
 
 
-	Sleep(1000);
-
+	
 
 	// Connect to server specified in serverAddress and socket connectSocket
 	iResult = connect(connectSocket, (SOCKADDR*)&serverAddress, sizeof(serverAddress));
@@ -72,8 +72,7 @@ int main()
 		WSACleanup();
 		return 1;
 	}
-
-
+	
 
 	while (true)
 	{
@@ -89,9 +88,11 @@ int main()
 		printf("\n1 - Izracunaj matricu\n");
 		printf("2 - Generisi random matricu\n");
 		printf("3 - Pokreni stres test\n");
+		printf("4 - Izadjete iz porgrama\n");
 		printf(" -> ");
 		scanf_s("%c", &unos);
-
+		if (unos == '4')
+			break;
 		switch (unos)
 		{
 		case '1':
@@ -125,7 +126,9 @@ int main()
 			}
 			break;
 		case '3':
-			//res = run_stres_test(connectSocket);
+		
+			res = run_stres_test();
+		
 			break;
 		default:
 			printf("\nPogresan unos!");
@@ -167,9 +170,7 @@ int main()
 		printf("\n\nDET = %s", dataBuffer);
 
 
-		printf("\nPress 'x' to exit or any other key to continue: ");
-		if (_getch() == 'x')
-			break;
+		
 	}
 
 	// Shutdown the connection since we're done
@@ -283,18 +284,67 @@ char* generate_random_matrix(int size)
 
 
 
-/*int run_stres_test(SOCKET connectSocket)
+int run_stres_test()
 {
 	srand(time(0));
-	char* sendingBuffer;
+
+	SOCKET connectSocket = INVALID_SOCKET;
+
+	// Variable used to store function return value
 	int iResult;
+
+	// Buffer we will use to store message
+	char* dataBuffer = new char[BUFFER_SIZE];
+	bool valid = false;
+
+	// WSADATA data structure that is to receive details of the Windows Sockets implementation
+	WSADATA wsaData;
+
+	// Initialize windows sockets library for this process
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	{
+		printf("WSAStartup failed with error: %d\n", WSAGetLastError());
+		return 1;
+	}
+
+	// create a socket
+	connectSocket = socket(AF_INET,
+		SOCK_STREAM,
+		IPPROTO_TCP);
+
+
+	if (connectSocket == INVALID_SOCKET)
+	{
+		printf("socket failed with error: %ld\n", WSAGetLastError());
+		WSACleanup();
+		return 1;
+	}
+
+
+	// Create and initialize address structure
+	sockaddr_in serverAddress;
+	serverAddress.sin_family = AF_INET;								// IPv4 protocol
+	serverAddress.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);	// ip address of server
+	serverAddress.sin_port = htons(SERVER_PORT);
+
+	iResult = connect(connectSocket, (SOCKADDR*)&serverAddress, sizeof(serverAddress));
+	if (iResult == SOCKET_ERROR)
+	{
+		printf("Unable to connect to server.\n");
+		closesocket(connectSocket);
+		WSACleanup();
+		return 1;
+	}
+
+
+	char* sendingBuffer;
 	int result = 0;
 
 	for (int i = 0; i < 10; i++)
 	{
 		int size = rand() % 5 + 2;
+		Sleep(1000);
 		sendingBuffer = generate_random_matrix(size);
-
 		iResult = send(connectSocket, (char*)sendingBuffer, strlen(sendingBuffer), 0);
 
 		if (iResult == SOCKET_ERROR)
@@ -308,22 +358,56 @@ char* generate_random_matrix(int size)
 		printf("Message successfully sent. Total bytes: %ld\n", iResult);
 
 		free(sendingBuffer);
-		memset(sendingBuffer, 0, 2048);
-	}
+		memset(sendingBuffer, 0, strlen(sendingBuffer));
 
-	for (int i = 0; i < 10; i++)
-	{
-		memset(sendingBuffer, 0, 2048);
-		iResult = recv(connectSocket, (char*)sendingBuffer, BUFFER_SIZE, 0);
+	}
+	unsigned long  mode = 1;
+	if (ioctlsocket(connectSocket, FIONBIO, &mode) != 0)
+		printf("ioctlsocket failed with error.");
+	fd_set readfds;
+
+	// timeout for select function
+	timeval timeVal;
+	timeVal.tv_sec = 2;
+	timeVal.tv_usec = 0;
+	int clientAddrSize = sizeof(struct sockaddr_in);
+
+	while (true) {
+		FD_ZERO(&readfds);
+		FD_SET(connectSocket, &readfds);
+
+		int iResult = 0;
+		iResult = select(0, &readfds, NULL, NULL, &timeVal);
+
 		if (iResult == SOCKET_ERROR)
 		{
-			printf("send failed with error: %d\n", WSAGetLastError());
-			closesocket(connectSocket);
+			printf("Select failed with error: %d\n", WSAGetLastError());
+			closesocket(iResult);
 			WSACleanup();
 			return 1;
 		}
+		else if (iResult == 0) // timeout expired
+		{
 
-		sendingBuffer[iResult] = '\0';
-		printf("\n\nDET = %s", sendingBuffer);
+			printf("Time Expired \n");
+		}
+		else {
+			iResult = recv(connectSocket, dataBuffer, BUFFER_SIZE, 0);
+
+			if (iResult > 0)
+			{
+				dataBuffer[iResult] = '\0';
+				printf("\nMessage received from client :\n" );
+
+				printf("%s\n", dataBuffer);
+
+				memset(dataBuffer, 0, BUFFER_SIZE);
+				printf("\n_______________________________  \n");
+
+			}
+		}
 	}
-}*/
+
+
+	return result;
+}

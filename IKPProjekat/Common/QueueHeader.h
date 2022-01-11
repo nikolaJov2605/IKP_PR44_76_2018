@@ -30,6 +30,11 @@ typedef struct Queue {
 	SOCKET socket;
 	struct Queue* next;
 }Queue;
+struct node {
+	char* data;
+	SOCKET socket;
+	struct node* next;
+} *front, * back;
 
 void initQueue(Queue** head);
 void EnQueue(Queue** head, Server data);
