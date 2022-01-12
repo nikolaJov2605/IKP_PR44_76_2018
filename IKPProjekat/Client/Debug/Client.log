@@ -1,10 +1,12 @@
 ﻿  Client.cpp
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(93,11): warning C4473: 'scanf_s' : not enough arguments passed for format string
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(93,11): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(93,11): message : the missing variadic argument 2 is required by format string '%c'
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(93,11): message : this argument is used as a buffer size
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(219,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(259,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(267,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(289,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(35,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(103,11): warning C4473: 'scanf_s' : not enough arguments passed for format string
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(103,11): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(103,11): message : the missing variadic argument 2 is required by format string '%c'
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(103,11): message : this argument is used as a buffer size
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(39,9): warning C4101: 'hThread': unreferenced local variable
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(38,8): warning C4101: 'threadID': unreferenced local variable
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(235,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(275,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(283,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Client.vcxproj -> C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Debug\Client.exe

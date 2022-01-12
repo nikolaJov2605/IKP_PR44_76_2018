@@ -46,13 +46,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		}
 		//ubacujemo socket u paket
 		char pom[4];
-		printf("\n %d \n", deq->socket);
+		//printf("\n %d \n", deq->socket);
 		sprintf_s(pom, "%d", deq->socket);
 		for (size_t j = 0; j < 4; j++)
 		{
 			datas[i + j] = pom[j];
 		}
-		printf("\nDATA: %s", data);
+		//printf("\nDATA: %s", data);
 
 		SOCKET clientSocket = (SOCKET)deq->socket;
 
@@ -80,30 +80,33 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		
 		int matrix_size = atoi(size);
 		int arrCount = pow(matrix_size, 2);
-		printf("\nDIMENZIJA: %d", matrix_size);
-		printf("\nELEMENATA: %d", arrCount);
+		//printf("\nDIMENZIJA: %d", matrix_size);
+		//printf("\nELEMENATA: %d", arrCount);
 		int nizIt = 0;
 		int* niz = new int[arrCount];
 
 		char* params = data + arrIdx;
 
 		printf("\nPARAMS: %s", params);
-
+	
 		int result = run_process(params);
 
 		printf("\nREZULTAT: %d", result);
 
 		char buffer[30];
+		memset(buffer, 0, 30);
 		_itoa_s(result, buffer, sizeof(buffer), 10);
 		int num = strlen(buffer);
 
 		printf("\nNUM: %d", num);
-
+	
 
 		int Result = SendResultToClient(buffer, num, clientSocket);
 		if (Result != 0) {
 			printf("Some error occupied \n");
 		}
+		free(deq->data);
+		free(deq);
 		delete[] niz;
 	}
 }
@@ -112,7 +115,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 // TCP server that use non-blocking sockets
 int main()
 {
-	//Role mora jedna * za matricu jer ako su 2 onda se on pogubi imamo ovako jednu *
+	
 	//iteriramo po elementima skontacemo kasnije
 	initQueue(&head);
 	
@@ -213,7 +216,7 @@ int main()
 
 	// timeout for select function
 	timeval timeVal;
-	timeVal.tv_sec = 1;
+	timeVal.tv_sec = 0;
 	timeVal.tv_usec = 0;
 	sockaddr_in clientAddr[MAX_CLIENTS];
 	memset(clientAddr, 0, MAX_CLIENTS * sizeof(sockaddr_in));
@@ -249,7 +252,7 @@ int main()
 		else if (selectResult == 0) // timeout expired
 		{
 			
-			printf("Time Expired \n");
+			continue;
 		}
 		else if (FD_ISSET(listenSocket, &readfds))
 		{
@@ -297,12 +300,14 @@ int main()
 					{
 						dataBuffer[iResult] = '\0';
 						printf("Message received from client (%d):\n", i + 1);
+						char* data = (char*)malloc(iResult + 1);
 
-						printf("%s", dataBuffer);
+						//printf("%s", dataBuffer);
 						
-						
+						strcpy_s(data, iResult + 1,dataBuffer);
+
 						ServerPacket_st packet;
-						packet.data = dataBuffer;
+						packet.data = data;
 						packet.socket = clientSockets[i];
 
 						//ubacujem u red naz serverski paket
@@ -311,8 +316,8 @@ int main()
 						//pustamo semafor da mozemo da posaljemo zahtev izvrsiocu
 						ReleaseSemaphore(hSemaphore, 1, NULL);
 
-						printf("_______________________________  \n");
-
+						printf("\n \n");
+						
 						//free(matrix_data);
 						//free(clientMessage);
 					}
@@ -367,7 +372,8 @@ int main()
 
 	//Close listen and accepted sockets
 	closesocket(listenSocket);
-
+	CloseHandle(hThread);
+	CloseHandle(hSemaphore);
 	// Deinitialize WSA library
 	WSACleanup();
 
@@ -386,7 +392,7 @@ int SendResultToClient(char* data, int num, SOCKET clientSocket) {
 		WSACleanup();
 		return 1;
 	}
-	Sleep(100);
+
 	iResult = send(connectSocket, (char*)data, num, 0);
 
 	if (iResult == SOCKET_ERROR)

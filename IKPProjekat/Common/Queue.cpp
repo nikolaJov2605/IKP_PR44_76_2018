@@ -31,68 +31,28 @@ Queue* DeQueue(Queue** head) {
 	if (*head == NULL)
 		return NULL;
 
-	Queue* helper = *head;
 	Queue* data = (Queue*)malloc(sizeof(Queue));
 
-	data->data = helper->data;
-	data->socket = helper->socket;
+	data->data = (*head)->data;
+	data->socket = (*head)->socket;
 	data->next = NULL;
+	struct Queue* tmp;
 
-	
-	free(helper);
+	/*Linked list does not exist or the list is empty*/
+	if (head == NULL || *head == NULL) 
+		return NULL;
+
+	/*Storing the head to a temporary variable*/
+	tmp = *head;
+
+	/*Moving head to the next node*/
+	*head = (*head)->next;
+
+	/*Deleting the first node*/
+	free(tmp);
+
 
 	return data;
 }
 
 
-/* Create an empty queue */
-void initialize() {
-    front = back = NULL;
-}
-
-/*
-Adding elements in Queue
-*/
-void enqueue(node** head, Server data) {
-	node* newElement = (node*)malloc(sizeof(node));
-
-	newElement->data = data.data;
-	newElement->socket = data.socket;
-	newElement->next = NULL;
-
-
-    if (back == NULL) {
-        front = back = newElement;
-    }
-    else {
-        back->next = newElement;
-    }
-}
-
-/*
-Removes an element from front of the queue
-*/
-void dequeue() {
-
-	node* data = (node*)malloc(sizeof(node));
-	
-	
-    if (front == NULL) {
-        printf("\nQueue is Empty \n");
-        return;
-    }
-    else {
-        data = front;
-        front = front->next;
-        if (front == NULL) {
-            back = NULL;
-        }
-		//free(data);
-    }
-}
-node* frontelement() {
-	if ((front != NULL) && (back != NULL))
-		return front;
-	else
-		return 0;
-}

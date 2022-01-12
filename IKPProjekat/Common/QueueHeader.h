@@ -12,10 +12,6 @@
 #include <shellapi.h>
 #include <time.h>
 
-typedef struct ClientMessage_st {
-	int size;
-	char* data;
-}Client;
 
 HANDLE hSemaphore;
 HANDLE wSemaphore;
@@ -30,11 +26,20 @@ typedef struct Queue {
 	SOCKET socket;
 	struct Queue* next;
 }Queue;
-struct node {
-	char* data;
-	SOCKET socket;
-	struct node* next;
-} *front, * back;
+
+
+
+//struct QNode {
+//	char* data;
+//	SOCKET socket;
+//	struct QNode* next;
+//};
+//
+//// The queue, front stores the front node of LL and rear stores the
+//// last node of LL
+//struct Queue {
+//	struct QNode* front, * rear;
+//};
 
 void initQueue(Queue** head);
 void EnQueue(Queue** head, Server data);

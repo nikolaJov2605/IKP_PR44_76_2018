@@ -18,12 +18,26 @@ char* input_matrix(int size);
 char* generate_random_matrix(int size);
 int run_stres_test();
 
+void menu() {
+	printf("\n1 - Izracunaj matricu\n");
+	printf("2 - Generisi random matricu\n");
+	printf("3 - Pokreni stres test\n");
+	printf("4 - Izadjete iz porgrama\n");
+	printf(" -> ");
+
+}
+
+
+
 // TCP client that use non-blocking sockets
 int main()
 {
+	srand(time(0));
 	// Socket used to communicate with server
 	SOCKET connectSocket = INVALID_SOCKET;
-
+	DWORD threadID;
+	HANDLE hThread;
+	
 	// Variable used to store function return value
 	int iResult;
 
@@ -73,9 +87,10 @@ int main()
 		return 1;
 	}
 	
-
+	char unos ='0';
 	while (true)
 	{
+		memset(&unos, 0, sizeof(unos));
 		char* tempBuffer = NULL;
 		int size = 0;
 		int res = 0;
@@ -83,21 +98,20 @@ int main()
 		//dataBuffer[0] = 0;
 		//memcpy(dataBuffer, 0, BUFFER_SIZE);
 		// Unos potrebnih podataka koji ce se poslati serveru
-		char unos;
+		menu();
 
-		printf("\n1 - Izracunaj matricu\n");
-		printf("2 - Generisi random matricu\n");
-		printf("3 - Pokreni stres test\n");
-		printf("4 - Izadjete iz porgrama\n");
-		printf(" -> ");
 		scanf_s("%c", &unos);
+		//scanf_s("%c", &unos);
+		getchar();
 		if (unos == '4')
 			break;
+		
 		switch (unos)
 		{
 		case '1':
 			printf("Unesite dimenziju matrice (maksimalno 99):\n");
 			scanf_s("%d", &size);
+			getchar();
 			if (size - 100 < 0)
 			{
 				tempBuffer = input_matrix(size);
@@ -113,6 +127,7 @@ int main()
 		case '2':
 			printf("Unesite dimenziju matrice (maksimalno 99):\n");
 			scanf_s("%d", &size);
+			getchar();
 			if (size - 100 < 0)
 			{
 				tempBuffer = generate_random_matrix(size);
@@ -134,7 +149,7 @@ int main()
 			printf("\nPogresan unos!");
 			break;
 		}
-
+		unos = '0';
 		if (tempBuffer != NULL)
 			memcpy(dataBuffer, tempBuffer, BUFFER_SIZE);
 
@@ -169,6 +184,7 @@ int main()
 		dataBuffer[iResult] = '\0';
 		printf("\n\nDET = %s", dataBuffer);
 
+		
 
 		
 	}
@@ -286,7 +302,7 @@ char* generate_random_matrix(int size)
 
 int run_stres_test()
 {
-	srand(time(0));
+	
 
 	SOCKET connectSocket = INVALID_SOCKET;
 
@@ -339,11 +355,11 @@ int run_stres_test()
 
 	char* sendingBuffer;
 	int result = 0;
-
-	for (int i = 0; i < 10; i++)
+	
+	for (int i = 0; i < 5; i++)
 	{
-		int size = rand() % 5 + 2;
-		Sleep(1000);
+		int size = rand() % 7 + 2;
+		Sleep(200);
 		sendingBuffer = generate_random_matrix(size);
 		iResult = send(connectSocket, (char*)sendingBuffer, strlen(sendingBuffer), 0);
 
@@ -368,7 +384,7 @@ int run_stres_test()
 
 	// timeout for select function
 	timeval timeVal;
-	timeVal.tv_sec = 2;
+	timeVal.tv_sec = 0;
 	timeVal.tv_usec = 0;
 	int clientAddrSize = sizeof(struct sockaddr_in);
 
@@ -388,21 +404,20 @@ int run_stres_test()
 		}
 		else if (iResult == 0) // timeout expired
 		{
-
-			printf("Time Expired \n");
+			continue;
 		}
 		else {
 			iResult = recv(connectSocket, dataBuffer, BUFFER_SIZE, 0);
 
 			if (iResult > 0)
 			{
+				
 				dataBuffer[iResult] = '\0';
-				printf("\nMessage received from client :\n" );
-
-				printf("%s\n", dataBuffer);
-
+		
+				Sleep(200);
+				printf("\n Result %s\n", dataBuffer);
 				memset(dataBuffer, 0, BUFFER_SIZE);
-				printf("\n_______________________________  \n");
+				
 
 			}
 		}
