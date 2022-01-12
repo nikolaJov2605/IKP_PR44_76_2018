@@ -13,11 +13,13 @@
 #define SERVER_PORT 27016
 #define BUFFER_SIZE 256
 
-
+#pragma region Definitions
 char* input_matrix(int size);
 char* generate_random_matrix(int size);
 int run_stres_test();
+#pragma endregion
 
+#pragma region Menu
 void menu() {
 	printf("\n1 - Izracunaj matricu\n");
 	printf("2 - Generisi random matricu\n");
@@ -26,18 +28,17 @@ void menu() {
 	printf(" -> ");
 
 }
-
-
+#pragma endregion
 
 // TCP client that use non-blocking sockets
 int main()
 {
 	srand(time(0));
+#pragma region TCP
 	// Socket used to communicate with server
 	SOCKET connectSocket = INVALID_SOCKET;
-	DWORD threadID;
-	HANDLE hThread;
-	
+
+
 	// Variable used to store function return value
 	int iResult;
 
@@ -75,7 +76,7 @@ int main()
 	serverAddress.sin_port = htons(SERVER_PORT);					// server port
 
 
-	
+
 
 	// Connect to server specified in serverAddress and socket connectSocket
 	iResult = connect(connectSocket, (SOCKADDR*)&serverAddress, sizeof(serverAddress));
@@ -86,7 +87,8 @@ int main()
 		WSACleanup();
 		return 1;
 	}
-	
+#pragma endregion
+
 	char unos ='0';
 	while (true)
 	{
@@ -94,15 +96,12 @@ int main()
 		char* tempBuffer = NULL;
 		int size = 0;
 		int res = 0;
-		// pripremamo buffer za slanje za upis podataka;
-		//dataBuffer[0] = 0;
-		//memcpy(dataBuffer, 0, BUFFER_SIZE);
-		// Unos potrebnih podataka koji ce se poslati serveru
+		//Poziv metode koja ispisuje interakciju sa korisnikom
 		menu();
 
 		scanf_s("%c", &unos);
-		//scanf_s("%c", &unos);
 		getchar();
+		//ako se unese 4 cisto da se ne ulazi
 		if (unos == '4')
 			break;
 		
@@ -155,8 +154,7 @@ int main()
 
 		free(tempBuffer);
 
-		//prosledjujemo adresu promenljive student u memoriji, jer se na toj adresi nalaze podaci koje saljemo
-		//kao i velicinu te strukture (jer je to duzina poruke u bajtima)
+		//Saljemo serveru podatke
 		iResult = send(connectSocket, (char*)dataBuffer, strlen(dataBuffer), 0);
 
 		// Check result of send function
@@ -185,8 +183,6 @@ int main()
 		printf("\n\nDET = %s", dataBuffer);
 
 		
-
-		
 	}
 
 	// Shutdown the connection since we're done
@@ -201,7 +197,6 @@ int main()
 		return 1;
 	}
 
-	Sleep(1000);
 
 	// Close connected socket
 	closesocket(connectSocket);
@@ -214,6 +209,7 @@ int main()
 	return 0;
 }
 
+#pragma region Select 1
 
 char* input_matrix(int size)
 {
@@ -264,6 +260,9 @@ char* input_matrix(int size)
 	return retBuffer;
 }
 
+#pragma endregion
+
+#pragma region Select 2
 
 char* generate_random_matrix(int size)
 {
@@ -298,11 +297,14 @@ char* generate_random_matrix(int size)
 	return retBuffer;
 }
 
+#pragma endregion
 
+
+#pragma region Select 3
 
 int run_stres_test()
 {
-	
+	//kreiram novi soket jer  cu da ga prebacim u non-blocking rezim
 
 	SOCKET connectSocket = INVALID_SOCKET;
 
@@ -355,7 +357,8 @@ int run_stres_test()
 
 	char* sendingBuffer;
 	int result = 0;
-	
+	// petlja koja salje zahteve serveru
+	//uspavljujemo nit jer seed ne moze da isprati 
 	for (int i = 0; i < 5; i++)
 	{
 		int size = rand() % 7 + 2;
@@ -377,6 +380,8 @@ int run_stres_test()
 		memset(sendingBuffer, 0, strlen(sendingBuffer));
 
 	}
+
+	//non-blocking mode 
 	unsigned long  mode = 1;
 	if (ioctlsocket(connectSocket, FIONBIO, &mode) != 0)
 		printf("ioctlsocket failed with error.");
@@ -388,6 +393,8 @@ int run_stres_test()
 	timeVal.tv_usec = 0;
 	int clientAddrSize = sizeof(struct sockaddr_in);
 
+	// vrtim se stalno i cekam da primim poruku
+	//uspavljujemo nit samo da moze lepo da se ispise na konzoli
 	while (true) {
 		FD_ZERO(&readfds);
 		FD_SET(connectSocket, &readfds);
@@ -411,13 +418,13 @@ int run_stres_test()
 
 			if (iResult > 0)
 			{
-				
+
 				dataBuffer[iResult] = '\0';
-		
+
 				Sleep(200);
 				printf("\n Result %s\n", dataBuffer);
 				memset(dataBuffer, 0, BUFFER_SIZE);
-				
+
 
 			}
 		}
@@ -426,3 +433,4 @@ int run_stres_test()
 
 	return result;
 }
+#pragma endregion

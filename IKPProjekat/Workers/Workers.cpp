@@ -13,12 +13,15 @@
 #define BUFFER_SIZE 256
 #define MAX_CLIENTS 5
 
+#pragma region Definicije
 
 int run_process(char* parameters);
 
 int** create_matrix(int* data, int size);
 void get_submatrix(int** matrix, int** temp_matrix, int row, int collumn, int matrix_size);
 int calculate_determinant(int** matrix, int matrix_size);
+#pragma endregion
+
 
 int main(int argc, char** argv)
 {
@@ -50,6 +53,7 @@ int main(int argc, char** argv)
 
 
 }
+#pragma region Run_Another_Process
 
 int run_process(char* parameters)
 {
@@ -100,6 +104,9 @@ int run_process(char* parameters)
 
 	return output;
 }
+#pragma endregion
+
+#pragma region Kreiranje matrice
 
 int** create_matrix(int* niz, int size)
 {
@@ -130,6 +137,9 @@ int** create_matrix(int* niz, int size)
 
 }
 
+#pragma endregion
+
+#pragma region Kreiranje Sub Matrice
 
 void get_submatrix(int** matrix, int** temp_matrix, int row, int collumn, int matrix_size)
 {
@@ -155,6 +165,9 @@ void get_submatrix(int** matrix, int** temp_matrix, int row, int collumn, int ma
 		}
 	}
 }
+#pragma endregion
+
+#pragma region Racunanje
 
 int calculate_determinant(int** matrix, int matrix_size)
 {
@@ -226,3 +239,4 @@ int calculate_determinant(int** matrix, int matrix_size)
 	return result;
 
 }
+#pragma endregion

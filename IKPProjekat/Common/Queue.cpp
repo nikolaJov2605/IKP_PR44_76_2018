@@ -5,6 +5,7 @@
 void initQueue(Queue** head) {
 	*head = NULL;
 }
+#pragma region EnQueue
 void EnQueue(Queue** head, Server data) {
 	Queue* newElement = (Queue*)malloc(sizeof(Queue));
 
@@ -16,7 +17,7 @@ void EnQueue(Queue** head, Server data) {
 		*head = newElement;
 		return;
 	}
-	
+
 
 	Queue* temp = *head;
 	while (temp->next != NULL) {
@@ -26,6 +27,9 @@ void EnQueue(Queue** head, Server data) {
 	temp->next = newElement;
 
 }
+#pragma endregion
+
+#pragma region DeQueue
 Queue* DeQueue(Queue** head) {
 
 	if (*head == NULL)
@@ -39,7 +43,7 @@ Queue* DeQueue(Queue** head) {
 	struct Queue* tmp;
 
 	/*Linked list does not exist or the list is empty*/
-	if (head == NULL || *head == NULL) 
+	if (head == NULL || *head == NULL)
 		return NULL;
 
 	/*Storing the head to a temporary variable*/
@@ -54,5 +58,9 @@ Queue* DeQueue(Queue** head) {
 
 	return data;
 }
+#pragma endregion
+
+
+
 
 

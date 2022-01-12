@@ -15,11 +15,16 @@
 #define MAX_CLIENTS 5
 #define SERVER_IP_ADDRESS "127.0.0.1"
 
+#pragma region Definicije
+
 int run_process(char* parameters);
 
-int SendResultToClient(char* data,int n, SOCKET clientSocket);
+int SendResultToClient(char* data, int n, SOCKET clientSocket);
 Queue* head = (Queue*)malloc(sizeof(Queue));
+#pragma endregion
 
+
+#pragma region Thread
 
 DWORD WINAPI ThreadProc(LPVOID lpParam)
 {
@@ -33,26 +38,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		/* Cekaj na signal da je stigao  paket. */
 		WaitForSingleObject(hSemaphore, INFINITE);
 		//skidamo sa reda 
-		
+
 		Queue* deq = DeQueue(&head);
 		const int number = strlen(deq->data);
 		char* data = deq->data;
-		int i = 0;
-		char datas[BUFFER_SIZE];
-		char c;
-		while (deq->data[i] != '\0') {
-			datas[i] = deq->data[i];
-			i++;
-		}
-		//ubacujemo socket u paket
-		char pom[4];
-		//printf("\n %d \n", deq->socket);
-		sprintf_s(pom, "%d", deq->socket);
-		for (size_t j = 0; j < 4; j++)
-		{
-			datas[i + j] = pom[j];
-		}
-		//printf("\nDATA: %s", data);
 
 		SOCKET clientSocket = (SOCKET)deq->socket;
 
@@ -77,7 +66,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 			}
 			k++;
 		}
-		
+
 		int matrix_size = atoi(size);
 		int arrCount = pow(matrix_size, 2);
 		//printf("\nDIMENZIJA: %d", matrix_size);
@@ -88,7 +77,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		char* params = data + arrIdx;
 
 		printf("\nPARAMS: %s", params);
-	
+		//poziv procesa
 		int result = run_process(params);
 
 		printf("\nREZULTAT: %d", result);
@@ -99,24 +88,27 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		int num = strlen(buffer);
 
 		printf("\nNUM: %d", num);
-	
 
+		//poziv funkcije za vracanje rezultata
 		int Result = SendResultToClient(buffer, num, clientSocket);
 		if (Result != 0) {
 			printf("Some error occupied \n");
 		}
+
 		free(deq->data);
 		free(deq);
 		delete[] niz;
 	}
 }
+#pragma endregion
+
 
 
 // TCP server that use non-blocking sockets
 int main()
 {
 	
-	//iteriramo po elementima skontacemo kasnije
+	//inicijalizacija reda
 	initQueue(&head);
 	
 	//kasnije ovo obrisati jer je bilo samo za proveru :D
@@ -128,6 +120,8 @@ int main()
 	hSemaphore = CreateSemaphore(0, 0, 10, NULL);
 	hThread = CreateThread(NULL, 0, &ThreadProc, NULL, 0,
 		&threadID);
+
+#pragma region TCP
 
 	SOCKET listenSocket = INVALID_SOCKET;
 
@@ -208,9 +202,12 @@ int main()
 		WSACleanup();
 		return 1;
 	}
+#pragma endregion
+
 
 	printf("Server socket is set to listening mode. Waiting for new connection requests.\n");
 
+#pragma region FD_Sets
 	// set of socket descriptors
 	fd_set readfds;
 
@@ -222,6 +219,9 @@ int main()
 	memset(clientAddr, 0, MAX_CLIENTS * sizeof(sockaddr_in));
 	int clientAddrSize = sizeof(struct sockaddr_in);
 
+#pragma endregion
+
+	
 
 	while (true)
 	{
@@ -251,13 +251,10 @@ int main()
 		}
 		else if (selectResult == 0) // timeout expired
 		{
-			
 			continue;
 		}
 		else if (FD_ISSET(listenSocket, &readfds))
 		{
-			// Struct for information about connected client
-			
 
 			// New connection request is received. Add new socket in array on first free position.
 			clientSockets[lastIndex] = accept(listenSocket, (struct sockaddr*)&clientAddr[lastIndex], &clientAddrSize);
@@ -275,6 +272,7 @@ int main()
 			}
 			else
 			{
+				//Accept soketi u non-block rezumu
 				if (ioctlsocket(clientSockets[lastIndex], FIONBIO, &mode) != 0)
 				{
 					printf("ioctlsocket failed with error.");
@@ -298,11 +296,11 @@ int main()
 
 					if (iResult > 0)
 					{
+						//Prijem zahteva klijenta
 						dataBuffer[iResult] = '\0';
-						printf("Message received from client (%d):\n", i + 1);
+						printf("\nMessage received from client (%d):\n", i + 1);
 						char* data = (char*)malloc(iResult + 1);
 
-						//printf("%s", dataBuffer);
 						
 						strcpy_s(data, iResult + 1,dataBuffer);
 
@@ -318,12 +316,12 @@ int main()
 
 						printf("\n \n");
 						
-						//free(matrix_data);
-						//free(clientMessage);
+					
 					}
 					else if (iResult == 0)
 					{
 						// connection was closed gracefully
+						//ako je negde supljina pomeramo za jedno mestu unazad sve
 						printf("Connection with client (%d) closed.\n", i + 1);
 						closesocket(clientSockets[i]);
 
@@ -345,6 +343,8 @@ int main()
 					else
 					{
 						// there was an error during recv
+						//pomeramo za jedno mesto unazad sve 
+
 						printf("recv failed with error: %d\n", WSAGetLastError());
 						closesocket(clientSockets[i]);
 
@@ -370,6 +370,7 @@ int main()
 		}
 	}
 
+	free(head);
 	//Close listen and accepted sockets
 	closesocket(listenSocket);
 	CloseHandle(hThread);
@@ -380,6 +381,7 @@ int main()
 	return 0;
 }
 
+#pragma region SendResult
 
 int SendResultToClient(char* data, int num, SOCKET clientSocket) {
 	SOCKET connectSocket = clientSocket;
@@ -404,7 +406,10 @@ int SendResultToClient(char* data, int num, SOCKET clientSocket) {
 	}
 	return 0;
 }
+#pragma endregion
 
+
+#pragma region Process
 
 int run_process(char* parameters)
 {
@@ -456,3 +461,4 @@ int run_process(char* parameters)
 
 	return output;
 }
+#pragma endregion

@@ -1,4 +1,1 @@
-﻿  Workers.cpp
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(29,20): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(33,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  Workers.vcxproj -> C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Debug\Workers.exe
+﻿
