@@ -20,7 +20,7 @@
 int run_process(char* parameters);
 
 int SendResultToClient(char* data, int n, SOCKET clientSocket);
-Queue* head = (Queue*)malloc(sizeof(Queue));
+Queue* head = new Queue[sizeof(Queue)];
 #pragma endregion
 
 
@@ -38,6 +38,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		/* Cekaj na signal da je stigao  paket. */
 		WaitForSingleObject(hSemaphore, INFINITE);
 		//skidamo sa reda 
+		printf("Before deq elemenata = : %d \n", Counter(head));
 
 		Queue* deq = DeQueue(&head);
 		const int number = strlen(deq->data);
@@ -78,13 +79,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 
 		printf("\nPARAMS: %s", params);
 		//poziv procesa
-		int result = run_process(params);
+		/*int result = run_process(params);
 
-		printf("\nREZULTAT: %d", result);
+		printf("\nREZULTAT: %d", result);*/
 
 		char buffer[30];
 		memset(buffer, 0, 30);
-		_itoa_s(result, buffer, sizeof(buffer), 10);
+		_itoa_s(19, buffer, sizeof(buffer), 10);
 		int num = strlen(buffer);
 
 		printf("\nNUM: %d", num);
@@ -94,10 +95,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		if (Result != 0) {
 			printf("Some error occupied \n");
 		}
-
-		free(deq->data);
+		printf("Deq elemenata = : %d \n", Counter(head));
+		free( deq->data);
+		deq->data = NULL;
 		free(deq);
+		deq = NULL;
 		delete[] niz;
+		niz = NULL;
 	}
 }
 #pragma endregion
@@ -221,7 +225,7 @@ int main()
 
 #pragma endregion
 
-	
+	bool flags = false;
 
 	while (true)
 	{
@@ -285,22 +289,28 @@ int main()
 		}
 		else
 		{
-
+			
 			// Check if new message is received from connected clients
 			for (int i = 0; i < lastIndex; i++)
 			{
 				// Check if new message is received from client on position "i"
 				if (FD_ISSET(clientSockets[i], &readfds))
 				{
+					
 					iResult = recv(clientSockets[i], dataBuffer, BUFFER_SIZE, 0);
 
 					if (iResult > 0)
 					{
+						
 						//Prijem zahteva klijenta
 						dataBuffer[iResult] = '\0';
+						if (strcmp(dataBuffer, "Exit") == 0) {
+							flags = true;
+							break;
+						}
+							
 						printf("\nMessage received from client (%d):\n", i + 1);
 						char* data = (char*)malloc(iResult + 1);
-
 						
 						strcpy_s(data, iResult + 1,dataBuffer);
 
@@ -367,16 +377,24 @@ int main()
 					}
 				}
 			}
+			if (flags)
+			{
+				break;
+			}
+			
 		}
 	}
 
+	
 	free(head);
+	head = NULL;
 	//Close listen and accepted sockets
 	closesocket(listenSocket);
 	CloseHandle(hThread);
 	CloseHandle(hSemaphore);
 	// Deinitialize WSA library
 	WSACleanup();
+	_getch();
 
 	return 0;
 }
@@ -404,6 +422,7 @@ int SendResultToClient(char* data, int num, SOCKET clientSocket) {
 		WSACleanup();
 		return 1;
 	}
+	
 	return 0;
 }
 #pragma endregion
@@ -445,6 +464,7 @@ int run_process(char* parameters)
 	}
 
 	delete[] params;
+	params = NULL;
 
 	WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
 

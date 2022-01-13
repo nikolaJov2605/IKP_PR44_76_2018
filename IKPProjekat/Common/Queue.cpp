@@ -54,11 +54,23 @@ Queue* DeQueue(Queue** head) {
 
 	/*Deleting the first node*/
 	free(tmp);
-
+	tmp = NULL;
 
 	return data;
 }
 #pragma endregion
+int Counter(Queue* head) {
+	Queue* tmp = head;
+	if (head == NULL) {
+		return 0;
+	}
+	int counter = 1;
+	while (tmp->next != NULL) {
+		counter++;
+		tmp = tmp->next;
+	}
+	return counter;
+}
 
 
 

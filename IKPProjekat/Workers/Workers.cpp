@@ -224,7 +224,7 @@ int calculate_determinant(int** matrix, int matrix_size)
 		//printf("%s", params);
 
 		delete[] parameters;
-
+		parameters = NULL;
 		//result += znak * matrix[0][i] * calculate_determinant(temp_matrix, matrix_size - 1);
 		result += znak * matrix[0][i] * run_process(params);
 		printf("\nRESULT: %d", result);
@@ -232,10 +232,12 @@ int calculate_determinant(int** matrix, int matrix_size)
 		znak = -znak;
 	}
 
-	for (int i = 0; i < matrix_size - 1; i++)
+	for (int i = 0; i < matrix_size - 1; i++) {
 		delete[] temp_matrix[i];
+		temp_matrix[i] = NULL;
+	}
 	delete[] temp_matrix;
-
+	temp_matrix = NULL;
 	return result;
 
 }

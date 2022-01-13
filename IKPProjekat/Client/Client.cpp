@@ -17,6 +17,7 @@
 char* input_matrix(int size);
 char* generate_random_matrix(int size);
 int run_stres_test();
+void close_Server(SOCKET socket);
 #pragma endregion
 
 #pragma region Menu
@@ -25,6 +26,7 @@ void menu() {
 	printf("2 - Generisi random matricu\n");
 	printf("3 - Pokreni stres test\n");
 	printf("4 - Izadjete iz porgrama\n");
+	//printf("5 - Test ciscenja resursa\n");
 	printf(" -> ");
 
 }
@@ -142,7 +144,10 @@ int main()
 		case '3':
 		
 			res = run_stres_test();
-		
+			continue;
+			break;
+		case '5':
+			close_Server(connectSocket);
 			break;
 		default:
 			printf("\nPogresan unos!");
@@ -153,7 +158,7 @@ int main()
 			memcpy(dataBuffer, tempBuffer, BUFFER_SIZE);
 
 		free(tempBuffer);
-
+		tempBuffer = NULL;
 		//Saljemo serveru podatke
 		iResult = send(connectSocket, (char*)dataBuffer, strlen(dataBuffer), 0);
 
@@ -205,7 +210,8 @@ int main()
 
 	// Deinitialize WSA library
 	WSACleanup();
-
+	getchar();
+	_getch();
 	return 0;
 }
 
@@ -359,9 +365,10 @@ int run_stres_test()
 	int result = 0;
 	// petlja koja salje zahteve serveru
 	//uspavljujemo nit jer seed ne moze da isprati 
-	for (int i = 0; i < 5; i++)
+	int times = 5;
+	for (int i = 0; i < times; i++)
 	{
-		int size = rand() % 7 + 2;
+		int size = rand() % 2 + 2;
 		Sleep(200);
 		sendingBuffer = generate_random_matrix(size);
 		iResult = send(connectSocket, (char*)sendingBuffer, strlen(sendingBuffer), 0);
@@ -377,7 +384,8 @@ int run_stres_test()
 		printf("Message successfully sent. Total bytes: %ld\n", iResult);
 
 		free(sendingBuffer);
-		memset(sendingBuffer, 0, strlen(sendingBuffer));
+		sendingBuffer = NULL;
+		
 
 	}
 
@@ -393,6 +401,7 @@ int run_stres_test()
 	timeVal.tv_usec = 0;
 	int clientAddrSize = sizeof(struct sockaddr_in);
 
+	int counter = 0;
 	// vrtim se stalno i cekam da primim poruku
 	//uspavljujemo nit samo da moze lepo da se ispise na konzoli
 	while (true) {
@@ -418,7 +427,8 @@ int run_stres_test()
 
 			if (iResult > 0)
 			{
-
+				if (++counter == 2)
+					break;
 				dataBuffer[iResult] = '\0';
 
 				Sleep(200);
@@ -430,7 +440,23 @@ int run_stres_test()
 		}
 	}
 
-
+	closesocket(connectSocket);
 	return result;
+}
+#pragma endregion
+
+#pragma region ClearHeap
+void close_Server(SOCKET socket) {
+	char sendingBuffer[5] = "Exit";
+
+		int iResult = send(socket, (char*)sendingBuffer, strlen(sendingBuffer), 0);
+
+		if (iResult == SOCKET_ERROR)
+		{
+			printf("send failed with error: %d\n", WSAGetLastError());
+			closesocket(socket);
+			WSACleanup();
+			return ;
+		}
 }
 #pragma endregion

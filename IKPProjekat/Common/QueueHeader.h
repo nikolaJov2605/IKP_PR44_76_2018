@@ -35,6 +35,6 @@ typedef struct Queue {
 void initQueue(Queue** head);
 void EnQueue(Queue** head, Server data);
 Queue* DeQueue(Queue** head);
-int NumberOfElements(Queue* head);
+int Counter(Queue* head);
 #pragma endregion
 
