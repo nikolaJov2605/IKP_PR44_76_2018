@@ -72,7 +72,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		//printf("\nDIMENZIJA: %d", matrix_size);
 		//printf("\nELEMENATA: %d", arrCount);
 		int nizIt = 0;
-		int* niz = new int[arrCount];
 
 		char* params = data + arrIdx;
 
@@ -97,7 +96,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 
 		free(deq->data);
 		free(deq);
-		delete[] niz;
 	}
 }
 #pragma endregion
@@ -107,7 +105,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 // TCP server that use non-blocking sockets
 int main()
 {
-	
+	bool terminate = false;
 	//inicijalizacija reda
 	initQueue(&head);
 	
@@ -223,7 +221,7 @@ int main()
 
 	
 
-	while (true)
+	while (!terminate)
 	{
 		// initialize socket set
 		FD_ZERO(&readfds);
@@ -300,9 +298,14 @@ int main()
 						dataBuffer[iResult] = '\0';
 						printf("\nMessage received from client (%d):\n", i + 1);
 						char* data = (char*)malloc(iResult + 1);
-
 						
 						strcpy_s(data, iResult + 1,dataBuffer);
+
+						if (strcmp(data, "Exit") == 0)
+						{
+							terminate = true;
+							break;
+						}
 
 						ServerPacket_st packet;
 						packet.data = data;
@@ -315,7 +318,6 @@ int main()
 						ReleaseSemaphore(hSemaphore, 1, NULL);
 
 						printf("\n \n");
-						
 					
 					}
 					else if (iResult == 0)
@@ -378,6 +380,8 @@ int main()
 	// Deinitialize WSA library
 	WSACleanup();
 
+	_getch();
+
 	return 0;
 }
 
@@ -432,11 +436,12 @@ int run_process(char* parameters)
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 	ShExecInfo.hwnd = NULL;
 	ShExecInfo.lpVerb = L"open";
-	ShExecInfo.lpFile = L"C:\\Users\\TUF\\Desktop\\ProjektiSemestar1\\IKPProjekat\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
+	ShExecInfo.lpFile = L"D:\\Fakultet\\IV godina\\I semestar\\Projekti\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
 	ShExecInfo.lpParameters = params;
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
 	ShExecInfo.hInstApp = NULL;
+
 
 	if (ShellExecuteExW(&ShExecInfo) == false)
 	{
@@ -444,6 +449,7 @@ int run_process(char* parameters)
 		return WSAGetLastError();
 	}
 
+	//free((void*)params);
 	delete[] params;
 
 	WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
@@ -456,8 +462,6 @@ int run_process(char* parameters)
 
 	CloseHandle(ShExecInfo.hProcess);
 
-	//ExitProcess(-1);
-	//exit(output);
 
 	return output;
 }

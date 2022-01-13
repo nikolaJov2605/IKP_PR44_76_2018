@@ -17,6 +17,7 @@
 char* input_matrix(int size);
 char* generate_random_matrix(int size);
 int run_stres_test();
+void terminate_server(SOCKET serverSocket);
 #pragma endregion
 
 #pragma region Menu
@@ -25,7 +26,8 @@ void menu() {
 	printf("2 - Generisi random matricu\n");
 	printf("3 - Pokreni stres test\n");
 	printf("4 - Izadjete iz porgrama\n");
-	printf(" -> ");
+	printf("5 - Ugasi server\n");
+	printf("-> ");
 
 }
 #pragma endregion
@@ -143,6 +145,9 @@ int main()
 		
 			res = run_stres_test();
 		
+			break;
+		case '5':
+			terminate_server(connectSocket);
 			break;
 		default:
 			printf("\nPogresan unos!");
@@ -432,5 +437,20 @@ int run_stres_test()
 
 
 	return result;
+}
+
+void terminate_server(SOCKET serverSocket)
+{
+	char sendingBuffer[5] = "Exit";
+
+	int iResult = send(serverSocket, (char*)sendingBuffer, strlen(sendingBuffer), 0);
+
+	if (iResult == SOCKET_ERROR)
+	{
+		printf("send failed with error: %d\n", WSAGetLastError());
+		closesocket(serverSocket);
+		WSACleanup();
+		return;
+	}
 }
 #pragma endregion

@@ -1,1 +1,4 @@
-﻿
+﻿  Workers.cpp
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(32,20): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(36,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  Workers.vcxproj -> D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Workers.exe
