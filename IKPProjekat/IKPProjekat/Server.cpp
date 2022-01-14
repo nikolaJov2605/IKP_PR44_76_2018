@@ -1,6 +1,6 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
-
+#pragma warning(disable : 4996)
 #include "../Common/Queue.cpp"
 
 #pragma comment (lib, "Ws2_32.lib")
@@ -79,13 +79,13 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 
 		printf("\nPARAMS: %s", params);
 		//poziv procesa
-		/*int result = run_process(params);
+		int result = run_process(params);
 
-		printf("\nREZULTAT: %d", result);*/
+		printf("\nREZULTAT: %d", result);
 
 		char buffer[30];
 		memset(buffer, 0, 30);
-		_itoa_s(19, buffer, sizeof(buffer), 10);
+		_itoa_s(result, buffer, sizeof(buffer), 10);
 		int num = strlen(buffer);
 
 		printf("\nNUM: %d", num);
@@ -441,17 +441,19 @@ int run_process(char* parameters)
 
 	params = new WCHAR[s];
 	MultiByteToWideChar(CP_ACP, 0, parameters, -1, (LPWSTR)params, s);
-
+	FILE* relative; 
+	//fopen_s(&relative,"IKP_PR44_76_2018\IKPProjekat\Debug\Workers.exe", "r");
 	//char canePath[110] = "C:\\Users\\TUF\\Desktop\\ProjektiSemestar1\\IKPProjekat\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
 	//char jolePath[100] = "D:\\Fakultet\\IV godina\\I semestar\\Projekti\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
-
+	//printf("Data\n");
+	//relative = fopen("IKPProjekat\Debug\Workers.exe", "r");
 	// kreiramo i popunjavamo strukturu procesa
 	SHELLEXECUTEINFO ShExecInfo = { 0 };
 	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 	ShExecInfo.hwnd = NULL;
 	ShExecInfo.lpVerb = L"open";
-	ShExecInfo.lpFile = L"C:\\Users\\TUF\\Desktop\\ProjektiSemestar1\\IKPProjekat\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
+	ShExecInfo.lpFile = L"Workers.exe";
 	ShExecInfo.lpParameters = params;
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;

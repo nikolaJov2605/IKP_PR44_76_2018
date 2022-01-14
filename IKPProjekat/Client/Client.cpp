@@ -16,7 +16,7 @@
 #pragma region Definitions
 char* input_matrix(int size);
 char* generate_random_matrix(int size);
-int run_stres_test();
+int run_stres_test(SOCKET connectSocket);
 void close_Server(SOCKET socket);
 #pragma endregion
 
@@ -143,7 +143,7 @@ int main()
 			break;
 		case '3':
 		
-			res = run_stres_test();
+			res = run_stres_test(connectSocket);
 			continue;
 			break;
 		case '5':
@@ -285,7 +285,6 @@ char* generate_random_matrix(int size)
 	strncat_s(dataBuffer, stringSize, strlen(stringSize));
 	char converted[10];
 
-	srand(time(0));
 	printf("\n");
 	for (int i = 0; i < pow(size, 2); i++)
 	{
@@ -308,12 +307,11 @@ char* generate_random_matrix(int size)
 
 #pragma region Select 3
 
-int run_stres_test()
+int run_stres_test(SOCKET connectSocket)
 {
 	//kreiram novi soket jer  cu da ga prebacim u non-blocking rezim
 
-	SOCKET connectSocket = INVALID_SOCKET;
-
+	
 	// Variable used to store function return value
 	int iResult;
 
@@ -321,44 +319,7 @@ int run_stres_test()
 	char* dataBuffer = new char[BUFFER_SIZE];
 	bool valid = false;
 
-	// WSADATA data structure that is to receive details of the Windows Sockets implementation
-	WSADATA wsaData;
-
-	// Initialize windows sockets library for this process
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
-	{
-		printf("WSAStartup failed with error: %d\n", WSAGetLastError());
-		return 1;
-	}
-
-	// create a socket
-	connectSocket = socket(AF_INET,
-		SOCK_STREAM,
-		IPPROTO_TCP);
-
-
-	if (connectSocket == INVALID_SOCKET)
-	{
-		printf("socket failed with error: %ld\n", WSAGetLastError());
-		WSACleanup();
-		return 1;
-	}
-
-
-	// Create and initialize address structure
-	sockaddr_in serverAddress;
-	serverAddress.sin_family = AF_INET;								// IPv4 protocol
-	serverAddress.sin_addr.s_addr = inet_addr(SERVER_IP_ADDRESS);	// ip address of server
-	serverAddress.sin_port = htons(SERVER_PORT);
-
-	iResult = connect(connectSocket, (SOCKADDR*)&serverAddress, sizeof(serverAddress));
-	if (iResult == SOCKET_ERROR)
-	{
-		printf("Unable to connect to server.\n");
-		closesocket(connectSocket);
-		WSACleanup();
-		return 1;
-	}
+	
 
 
 	char* sendingBuffer;
@@ -384,9 +345,6 @@ int run_stres_test()
 		printf("Message successfully sent. Total bytes: %ld\n", iResult);
 
 		free(sendingBuffer);
-		sendingBuffer = NULL;
-		
-
 	}
 
 	//non-blocking mode 
@@ -439,8 +397,9 @@ int run_stres_test()
 			}
 		}
 	}
-
-	closesocket(connectSocket);
+	mode = 0;
+	if (ioctlsocket(connectSocket, FIONBIO, &mode) != 0)
+		printf("ioctlsocket failed with error.");
 	return result;
 }
 #pragma endregion
