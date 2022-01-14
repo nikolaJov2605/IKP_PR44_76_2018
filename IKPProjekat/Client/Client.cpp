@@ -22,11 +22,11 @@ void close_Server(SOCKET socket);
 
 #pragma region Menu
 void menu() {
-	printf("\n1 - Izracunaj matricu\n");
-	printf("2 - Generisi random matricu\n");
-	printf("3 - Pokreni stres test\n");
-	printf("4 - Izadjete iz porgrama\n");
-	//printf("5 - Test ciscenja resursa\n");
+	printf("\n 1 - Izracunaj matricu\n");
+	printf(" 2 - Generisi random matricu\n");
+	printf(" 3 - Pokreni stres test\n");
+	printf(" 4 - Izadjete iz porgrama\n");
+	printf(" 5 - Test ciscenja resursa\n");
 	printf(" -> ");
 
 }
@@ -284,11 +284,14 @@ char* generate_random_matrix(int size)
 	retBuffer[0] = 0;
 	strncat_s(dataBuffer, stringSize, strlen(stringSize));
 	char converted[10];
-
+	int sign = 0;
 	printf("\n");
 	for (int i = 0; i < pow(size, 2); i++)
 	{
-		niz[i] = rand() % 200 + 1;
+		sign = rand() % 2;
+		niz[i] = rand() % 50 + 1;
+		if (sign)
+			niz[i] *= -1;
 		printf("%d ", niz[i]);
 		_itoa_s(niz[i], converted, 10);
 
@@ -329,7 +332,7 @@ int run_stres_test(SOCKET connectSocket)
 	int times = 5;
 	for (int i = 0; i < times; i++)
 	{
-		int size = rand() % 2 + 2;
+		int size = rand() % 10 + 2;
 		Sleep(200);
 		sendingBuffer = generate_random_matrix(size);
 		iResult = send(connectSocket, (char*)sendingBuffer, strlen(sendingBuffer), 0);

@@ -16,7 +16,7 @@
 #define SERVER_IP_ADDRESS "127.0.0.1"
 
 #pragma region Definicije
-
+char* FullPath(char* partialPath);
 int run_process(char* parameters);
 
 int SendResultToClient(char* data, int n, SOCKET clientSocket);
@@ -38,7 +38,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		/* Cekaj na signal da je stigao  paket. */
 		WaitForSingleObject(hSemaphore, INFINITE);
 		//skidamo sa reda 
-		printf("Before deq elemenata = : %d \n", Counter(head));
+		//printf("Before deq elemenata = : %d \n", Counter(head));
 
 		Queue* deq = DeQueue(&head);
 		const int number = strlen(deq->data);
@@ -95,7 +95,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		if (Result != 0) {
 			printf("Some error occupied \n");
 		}
-		printf("Deq elemenata = : %d \n", Counter(head));
+		//printf("Deq elemenata = : %d \n", Counter(head));
 		free( deq->data);
 		deq->data = NULL;
 		free(deq);
@@ -399,6 +399,21 @@ int main()
 	return 0;
 }
 
+char* FullPath(char* relativePath)
+{
+	char* full = new char[_MAX_PATH];
+	if (_fullpath(full, relativePath, _MAX_PATH) != NULL)
+	{
+		printf("Full path is: %s\n", full);
+		return full;
+	}
+	else
+	{
+		printf("Invalid path\n");
+		return 0;
+	}
+}
+
 #pragma region SendResult
 
 int SendResultToClient(char* data, int num, SOCKET clientSocket) {
@@ -434,13 +449,24 @@ int run_process(char* parameters)
 {
 	// da bi struktura primila parametre za poziv procesa, potrebno ih je konvertovati u odgovarajuci tip
 	const WCHAR* params; //LPCWSTR
+	WCHAR* path;
 
-	//int size = MultiByteToWideChar(CP_ACP, 0, parameters, -1, NULL, 0);
 
 	int s = strlen(parameters);
 
 	params = new WCHAR[s];
 	MultiByteToWideChar(CP_ACP, 0, parameters, -1, (LPWSTR)params, s);
+
+	char relativePath[24] = "..\\Debug\\Workers.exe";
+	char* full_path = FullPath(relativePath);
+	s = strlen(full_path);
+
+	path = new WCHAR[s];
+	MultiByteToWideChar(CP_ACP, 0, full_path, -1, (LPWSTR)path, s);
+
+
+	path[s] = L'\0';
+
 	FILE* relative; 
 	//fopen_s(&relative,"IKP_PR44_76_2018\IKPProjekat\Debug\Workers.exe", "r");
 	//char canePath[110] = "C:\\Users\\TUF\\Desktop\\ProjektiSemestar1\\IKPProjekat\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
@@ -453,7 +479,7 @@ int run_process(char* parameters)
 	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
 	ShExecInfo.hwnd = NULL;
 	ShExecInfo.lpVerb = L"open";
-	ShExecInfo.lpFile = L"Workers.exe";
+	ShExecInfo.lpFile = path;
 	ShExecInfo.lpParameters = params;
 	ShExecInfo.lpDirectory = NULL;
 	ShExecInfo.nShow = SW_SHOW;
@@ -466,7 +492,8 @@ int run_process(char* parameters)
 	}
 
 	delete[] params;
-	params = NULL;
+	delete[] full_path;
+
 
 	WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
 
