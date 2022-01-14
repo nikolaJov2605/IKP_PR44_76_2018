@@ -1,9 +1,11 @@
 ﻿  Client.cpp
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(38,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(104,11): warning C4473: 'scanf_s' : not enough arguments passed for format string
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(104,11): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(104,11): message : the missing variadic argument 2 is required by format string '%c'
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(104,11): message : this argument is used as a buffer size
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(237,23): warning C4018: '<': signed/unsigned mismatch
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(280,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(16,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(82,11): warning C4473: 'scanf_s' : not enough arguments passed for format string
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(82,11): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(82,11): message : the missing variadic argument 2 is required by format string '%c'
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\Client.cpp(82,11): message : this argument is used as a buffer size
+  functions.cpp
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(32,23): warning C4018: '<': signed/unsigned mismatch
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(73,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+  Generating Code...
   Client.vcxproj -> D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Client.exe

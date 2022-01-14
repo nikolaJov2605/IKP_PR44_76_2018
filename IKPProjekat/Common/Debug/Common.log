@@ -1,5 +1,6 @@
 ﻿  pch.cpp
   Common.cpp
+  functions.cpp
   Queue.cpp
   Generating Code...
   Common.vcxproj -> D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Common.lib

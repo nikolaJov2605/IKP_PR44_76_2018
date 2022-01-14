@@ -2,24 +2,14 @@
 #define WIN32_LEAN_AND_MEAN
 #pragma warning(disable : 4996)
 #include "../Common/Queue.cpp"
-
-#pragma comment (lib, "Ws2_32.lib")
-#pragma comment (lib, "Mswsock.lib")
-#pragma comment (lib, "AdvApi32.lib")
+#include "../Common/functions.cpp"
+#include "functions.h"
+#include "constants.h"
 
 #pragma pack(1)
 
-#define SERVER_PORT 27016
-#define SERVER_PORTWorker 27017
-#define BUFFER_SIZE 256
-#define MAX_CLIENTS 5
-#define SERVER_IP_ADDRESS "127.0.0.1"
 
 #pragma region Definicije
-char* FullPath(char* partialPath);
-int run_process(char* parameters);
-
-int SendResultToClient(char* data, int n, SOCKET clientSocket);
 Queue* head = new Queue[sizeof(Queue)];
 #pragma endregion
 
@@ -96,7 +86,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 			printf("Some error occupied \n");
 		}
 		//printf("Deq elemenata = : %d \n", Counter(head));
-		free( deq->data);
+		free(deq->data);
 		deq->data = NULL;
 		free(deq);
 		deq = NULL;
@@ -111,10 +101,10 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 // TCP server that use non-blocking sockets
 int main()
 {
-	
+
 	//inicijalizacija reda
 	initQueue(&head);
-	
+
 	//kasnije ovo obrisati jer je bilo samo za proveru :D
 	// Socket used for listening for new clients 
 
@@ -289,30 +279,30 @@ int main()
 		}
 		else
 		{
-			
+
 			// Check if new message is received from connected clients
 			for (int i = 0; i < lastIndex; i++)
 			{
 				// Check if new message is received from client on position "i"
 				if (FD_ISSET(clientSockets[i], &readfds))
 				{
-					
+
 					iResult = recv(clientSockets[i], dataBuffer, BUFFER_SIZE, 0);
 
 					if (iResult > 0)
 					{
-						
+
 						//Prijem zahteva klijenta
 						dataBuffer[iResult] = '\0';
 						if (strcmp(dataBuffer, "Exit") == 0) {
 							flags = true;
 							break;
 						}
-							
+
 						printf("\nMessage received from client (%d):\n", i + 1);
 						char* data = (char*)malloc(iResult + 1);
-						
-						strcpy_s(data, iResult + 1,dataBuffer);
+
+						strcpy_s(data, iResult + 1, dataBuffer);
 
 						ServerPacket_st packet;
 						packet.data = data;
@@ -325,8 +315,8 @@ int main()
 						ReleaseSemaphore(hSemaphore, 1, NULL);
 
 						printf("\n \n");
-						
-					
+
+
 					}
 					else if (iResult == 0)
 					{
@@ -381,11 +371,11 @@ int main()
 			{
 				break;
 			}
-			
+
 		}
 	}
 
-	
+
 	free(head);
 	head = NULL;
 	//Close listen and accepted sockets
@@ -399,115 +389,4 @@ int main()
 	return 0;
 }
 
-char* FullPath(char* relativePath)
-{
-	char* full = new char[_MAX_PATH];
-	if (_fullpath(full, relativePath, _MAX_PATH) != NULL)
-	{
-		printf("Full path is: %s\n", full);
-		return full;
-	}
-	else
-	{
-		printf("Invalid path\n");
-		return 0;
-	}
-}
 
-#pragma region SendResult
-
-int SendResultToClient(char* data, int num, SOCKET clientSocket) {
-	SOCKET connectSocket = clientSocket;
-
-	int iResult;
-
-	if (connectSocket == INVALID_SOCKET)
-	{
-		printf("socket failed with error: %ld\n", WSAGetLastError());
-		WSACleanup();
-		return 1;
-	}
-
-	iResult = send(connectSocket, (char*)data, num, 0);
-
-	if (iResult == SOCKET_ERROR)
-	{
-		printf("send failed with error: %d\n", WSAGetLastError());
-		closesocket(connectSocket);
-		WSACleanup();
-		return 1;
-	}
-	
-	return 0;
-}
-#pragma endregion
-
-
-#pragma region Process
-
-int run_process(char* parameters)
-{
-	// da bi struktura primila parametre za poziv procesa, potrebno ih je konvertovati u odgovarajuci tip
-	const WCHAR* params; //LPCWSTR
-	WCHAR* path;
-
-
-	int s = strlen(parameters);
-
-	params = new WCHAR[s];
-	MultiByteToWideChar(CP_ACP, 0, parameters, -1, (LPWSTR)params, s);
-
-	char relativePath[24] = "..\\Debug\\Workers.exe";
-	char* full_path = FullPath(relativePath);
-	s = strlen(full_path);
-
-	path = new WCHAR[s];
-	MultiByteToWideChar(CP_ACP, 0, full_path, -1, (LPWSTR)path, s);
-
-
-	path[s] = L'\0';
-
-	FILE* relative; 
-	//fopen_s(&relative,"IKP_PR44_76_2018\IKPProjekat\Debug\Workers.exe", "r");
-	//char canePath[110] = "C:\\Users\\TUF\\Desktop\\ProjektiSemestar1\\IKPProjekat\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
-	//char jolePath[100] = "D:\\Fakultet\\IV godina\\I semestar\\Projekti\\IKP_PR44_76_2018\\IKPProjekat\\Debug\\Workers.exe";
-	//printf("Data\n");
-	//relative = fopen("IKPProjekat\Debug\Workers.exe", "r");
-	// kreiramo i popunjavamo strukturu procesa
-	SHELLEXECUTEINFO ShExecInfo = { 0 };
-	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-	ShExecInfo.hwnd = NULL;
-	ShExecInfo.lpVerb = L"open";
-	ShExecInfo.lpFile = path;
-	ShExecInfo.lpParameters = params;
-	ShExecInfo.lpDirectory = NULL;
-	ShExecInfo.nShow = SW_SHOW;
-	ShExecInfo.hInstApp = NULL;
-
-	if (ShellExecuteExW(&ShExecInfo) == false)
-	{
-		printf("\nError %d\n", WSAGetLastError());
-		return WSAGetLastError();
-	}
-
-	delete[] params;
-	delete[] full_path;
-
-
-	WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
-
-	DWORD output = -1;
-	bool success = GetExitCodeProcess(ShExecInfo.hProcess, &output);
-	if (!success) {
-		printf("\nProces exit code error: %d", GetLastError());
-	}
-
-	CloseHandle(ShExecInfo.hProcess);
-
-	//ExitProcess(-1);
-	//exit(output);
-
-	return output;
-}
-#pragma endregion
