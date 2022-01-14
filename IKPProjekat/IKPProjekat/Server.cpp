@@ -57,7 +57,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 			}
 			k++;
 		}
-
 		int matrix_size = atoi(size);
 		int arrCount = pow(matrix_size, 2);
 		//printf("\nDIMENZIJA: %d", matrix_size);
@@ -65,11 +64,38 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		int nizIt = 0;
 		int* niz = new int[arrCount];
 
-		char* params = data + arrIdx;
 
-		printf("\nPARAMS: %s", params);
+		char* params = data + arrIdx;
+		int len = strlen(params);
+		params[len - 1] = '\0';
+		char** arguments = new char* [matrix_size * matrix_size + 2];
+		for (int i = 0; i < matrix_size * matrix_size + 2; i++)
+		{
+			arguments[i] = new char[20];
+		}
+
+		strcpy(arguments[0], "Workers.exe");
+
+		//char string[50] = "Hello! We are learning about strtok";
+		// Extract the first token
+		char* token = strtok(params, " ");
+		// loop through the string to extract all other tokens
+		int i = 0;
+		while (token != NULL) {
+			printf(" %s\n", token); //printing each token
+			arguments[i + 1] = token;
+			token = strtok(NULL, " ");
+			i++;
+		}
+		arguments[matrix_size * matrix_size + 1] = NULL;
+		printf("\nPARAMS: %s", params); 
+		printf("\nARGS: ");
+		for (int i = 0; i < matrix_size * matrix_size + 1; i++)
+		{
+			printf("%s\n", arguments[i]);
+		}
 		//poziv procesa
-		int result = run_process(params);
+		int result = run_process(arguments);
 
 		printf("\nREZULTAT: %d", result);
 
@@ -86,6 +112,11 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 			printf("Some error occupied \n");
 		}
 		//printf("Deq elemenata = : %d \n", Counter(head));
+		/*for (int i = 0; i < matrix_size * matrix_size + 2; i++)
+		{
+			delete[] arguments[i];
+		}
+		delete[] arguments;*/
 		free(deq->data);
 		deq->data = NULL;
 		free(deq);

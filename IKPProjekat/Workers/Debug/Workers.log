@@ -1,5 +1,6 @@
 ﻿  functions.cpp
   Workers.cpp
+D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(14,20): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
 D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Workers\Workers.cpp(18,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Generating Code...
-LINK : fatal error LNK1104: cannot open file 'D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Workers.exe'
+  Workers.vcxproj -> D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Workers.exe

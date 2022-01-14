@@ -1,3 +1,5 @@
+
+#pragma warning(disable : 4996)
 #include "functions.h"
 #include "constants.h"
 #include "../Common/functions.cpp"
@@ -95,7 +97,14 @@ int calculate_determinant(int** matrix, int matrix_size)
 	{
 		get_submatrix(matrix, temp_matrix, 0, i, matrix_size);
 
-		char params[2048];
+		char** arguments = new char* [matrix_size * matrix_size + 2];
+		for (int i = 0; i < matrix_size * matrix_size + 2; i++)
+		{
+			arguments[i] = new char[20];
+		}
+
+		strcpy_s(arguments[0], 20, "Workers.exe");
+
 		int* parameters = new int[(matrix_size - 1) * (matrix_size - 1)];
 		int idx = 0;
 		for (int i = 0; i < matrix_size - 1; i++)
@@ -106,20 +115,26 @@ int calculate_determinant(int** matrix, int matrix_size)
 				idx++;
 			}
 		}
-		int len = 0;
-		for (int i = 0; i < (matrix_size - 1) * (matrix_size - 1); i++)
-		{
-			len += snprintf(params + len, 2048 - len, "%d ", parameters[i]);
-		}
-		//printf("%s", params);
 
+		for (int i = 0; i < (matrix_size - 1) * (matrix_size - 1) + 1; i++)
+		{
+			_itoa(parameters[i], arguments[i + 1], 10);
+		}
+		
+		arguments[(matrix_size - 1) * (matrix_size - 1) + 1] = NULL;
 		delete[] parameters;
-		parameters = NULL;
+
 		//result += znak * matrix[0][i] * calculate_determinant(temp_matrix, matrix_size - 1);
-		result += znak * matrix[0][i] * run_process(params);
+		result += znak * matrix[0][i] * run_process(arguments);
 		printf("\nRESULT: %d", result);
 
 		znak = -znak;
+
+		for (int i = 0; i < matrix_size * matrix_size + 2; i++)
+		{
+			delete[] arguments[i];
+		}
+		delete[] arguments;
 	}
 
 	for (int i = 0; i < matrix_size - 1; i++) {

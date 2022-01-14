@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable : 4996)
 
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")

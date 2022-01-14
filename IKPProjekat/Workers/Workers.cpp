@@ -4,20 +4,19 @@
 #include "functions.h"
 
 
-
 int main(int argc, char** argv)
 {
+	printf("ARGC: %d\n", argc);
 	int* niz = new int[argc - 1];
 
-	for (int i = 1; i < argc - 1; i++)
+	for (int i = 1; i < argc; i++)
 	{
-		niz[i - 1] = atoi(argv[i]);
+		niz[i - 1] = atof(argv[i]);
 		printf("%d ", niz[i - 1]);
 	}
 	//printf("\nPARAMETRI: %s", **argv);
-	int matrix_size = sqrt(argc - 2);
+	int matrix_size = sqrt(argc - 1);
 	printf("\nDIMENZIJA MATRICE: %d", matrix_size);
-
 	int** matrix = create_matrix(niz, matrix_size);
 
 	delete[] niz;
