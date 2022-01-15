@@ -5,4 +5,4 @@
 #include <process.h>
 
 char* FullPath(char* partialPath);
-int run_process(char** arguments);
+int run_process(char** arguments, int matrix_size);

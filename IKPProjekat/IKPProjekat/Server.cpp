@@ -95,7 +95,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 			printf("%s\n", arguments[i]);
 		}
 		//poziv procesa
-		int result = run_process(arguments);
+		int result = run_process(arguments, matrix_size);
 
 		printf("\nREZULTAT: %d", result);
 
@@ -112,17 +112,18 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 			printf("Some error occupied \n");
 		}
 		//printf("Deq elemenata = : %d \n", Counter(head));
-		/*for (int i = 0; i < matrix_size * matrix_size + 2; i++)
-		{
-			delete[] arguments[i];
-		}
-		delete[] arguments;*/
+		
 		free(deq->data);
 		deq->data = NULL;
 		free(deq);
 		deq = NULL;
 		delete[] niz;
 		niz = NULL;
+		/*for (int i = 2; i < matrix_size * matrix_size + 2; i++)
+		{
+			delete[] arguments[i];
+		}
+		delete[] arguments;*/
 	}
 }
 #pragma endregion
