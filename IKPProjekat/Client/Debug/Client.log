@@ -1,4 +1,1 @@
-﻿  functions.cpp
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(32,23): warning C4018: '<': signed/unsigned mismatch
-D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(73,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
-  Client.vcxproj -> D:\Fakultet\IV godina\I semestar\Projekti\IKP_PR44_76_2018\IKPProjekat\Debug\Client.exe
+﻿

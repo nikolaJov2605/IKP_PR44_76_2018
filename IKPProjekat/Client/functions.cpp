@@ -121,7 +121,7 @@ int run_stres_test(SOCKET connectSocket)
 	int times = 5;
 	for (int i = 0; i < times; i++)
 	{
-		int size = rand() % 8 + 2;
+		int size = rand() % 5 + 2;
 		Sleep(200);
 		sendingBuffer = generate_random_matrix(size);
 		iResult = send(connectSocket, (char*)sendingBuffer, strlen(sendingBuffer), 0);
