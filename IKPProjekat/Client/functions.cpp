@@ -82,7 +82,7 @@ char* generate_random_matrix(int size)
 	for (int i = 0; i < pow(size, 2); i++)
 	{
 		sign = rand() % 2;
-		niz[i] = rand() % 50 + 1;
+		niz[i] = rand() % 40 + 1;
 		if (sign)
 			niz[i] *= -1;
 		printf("%d ", niz[i]);

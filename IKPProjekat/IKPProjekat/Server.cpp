@@ -60,8 +60,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		}
 		int matrix_size = atoi(size);
 		int arrCount = pow(matrix_size, 2);
-		printf("\nDIMENZIJA: %d", matrix_size);
-		printf("\nELEMENATA: %d", arrCount);
+		//printf("\nDIMENZIJA: %d", matrix_size);
+		//printf("\nELEMENATA: %d", arrCount);
 		int nizIt = 0;
 		int* niz = new int[arrCount];
 
@@ -87,8 +87,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 			i++;
 		}
 		arguments[matrix_size * matrix_size + 1] = NULL;
-		printf("\nPARAMS: %s", params); 
-		printf("\nARGS: ");
+		//printf("\nPARAMS: %s", params); 
+		//printf("\nARGS: ");
 		for (int i = 0; i < matrix_size * matrix_size + 1; i++)
 		{
 			printf("%s\n", arguments[i]);

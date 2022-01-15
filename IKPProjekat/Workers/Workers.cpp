@@ -24,11 +24,11 @@ int main(int argc, char** argv)
 	int result = calculate_determinant(matrix, matrix_size);
 
 	printf("\nRESULT: %d", result);
+
 	for (int i = 0; i < matrix_size; i++)
 		delete[] matrix[i];
 	delete[] matrix;
 
-	//_getch();
 	ExitProcess(result);
 	return 0;
 
