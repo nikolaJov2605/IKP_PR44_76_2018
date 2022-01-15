@@ -125,7 +125,7 @@ int calculate_determinant(int** matrix, int matrix_size)
 		delete[] parameters;
 
 		//result += znak * matrix[0][i] * calculate_determinant(temp_matrix, matrix_size - 1);
-		result += znak * matrix[0][i] * run_process(arguments);
+		result += znak * matrix[0][i] * run_process(arguments, matrix_size - 1);
 		printf("\nRESULT: %d", result);
 
 		znak = -znak;

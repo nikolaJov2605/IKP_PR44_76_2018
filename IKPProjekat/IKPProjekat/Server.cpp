@@ -18,11 +18,11 @@ Queue* head = new Queue[sizeof(Queue)];
 
 DWORD WINAPI ThreadProc(LPVOID lpParam)
 {
-	int k = 0;		// iterator;
 	char size[3];
 	char num[20];
-	int arrIdx = -1;	//indeks u data gde pocinje niz
+	int k = 0;		// iterator;
 	bool collectedSize = false;
+	int arrIdx = -1;	//indeks u data gde pocinje niz
 	while (true)
 	{
 		/* Cekaj na signal da je stigao  paket. */
@@ -31,7 +31,6 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		//printf("Before deq elemenata = : %d \n", Counter(head));
 
 		Queue* deq = DeQueue(&head);
-		const int number = strlen(deq->data);
 		char* data = deq->data;
 
 		SOCKET clientSocket = (SOCKET)deq->socket;
@@ -40,6 +39,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		//ona poziva izvrsioca
 
 
+		k = 0;
+		collectedSize = false;
 		while (data[k] != '\0')
 		{
 			if (data[k] == ' ')
@@ -59,8 +60,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		}
 		int matrix_size = atoi(size);
 		int arrCount = pow(matrix_size, 2);
-		//printf("\nDIMENZIJA: %d", matrix_size);
-		//printf("\nELEMENATA: %d", arrCount);
+		printf("\nDIMENZIJA: %d", matrix_size);
+		printf("\nELEMENATA: %d", arrCount);
 		int nizIt = 0;
 		int* niz = new int[arrCount];
 
@@ -76,10 +77,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 
 		strcpy(arguments[0], "Workers.exe");
 
-		//char string[50] = "Hello! We are learning about strtok";
-		// Extract the first token
 		char* token = strtok(params, " ");
-		// loop through the string to extract all other tokens
+		
 		int i = 0;
 		while (token != NULL) {
 			printf(" %s\n", token); //printing each token
@@ -119,7 +118,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		deq = NULL;
 		delete[] niz;
 		niz = NULL;
-		/*for (int i = 2; i < matrix_size * matrix_size + 2; i++)
+		/*for (int i = 0; i < matrix_size * matrix_size + 2; i++)
 		{
 			delete[] arguments[i];
 		}

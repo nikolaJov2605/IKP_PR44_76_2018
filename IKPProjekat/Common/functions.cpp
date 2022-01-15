@@ -26,6 +26,7 @@ int run_process(char** arguments, int matrix_size)
 	res = _spawnv(P_WAIT, full_path, arguments);
 	for (int i = 0; i < matrix_size * matrix_size + 2; i++)
 	{
+		//memset(arguments[i], 0, strlen(arguments[i]));
 		delete[] arguments[i];
 	}
 	delete[] arguments;
