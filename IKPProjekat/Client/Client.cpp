@@ -129,6 +129,7 @@ int main()
 			break;
 		default:
 			printf("\nPogresan unos!");
+			continue;
 			break;
 		}
 		unos = '0';
@@ -188,7 +189,6 @@ int main()
 
 	// Deinitialize WSA library
 	WSACleanup();
-	getchar();
 	_getch();
 	return 0;
 }

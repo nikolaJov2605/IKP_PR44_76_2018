@@ -24,9 +24,11 @@ int run_process(char** arguments, int matrix_size)
 	char relativePath[24] = "..\\Debug\\Workers.exe";
 	char* full_path = FullPath(relativePath);
 	res = _spawnv(P_WAIT, full_path, arguments);
+
+	//printf("\nDEALOCIRAJ");
+	//_getch();
 	for (int i = 0; i < matrix_size * matrix_size + 2; i++)
 	{
-		//memset(arguments[i], 0, strlen(arguments[i]));
 		delete[] arguments[i];
 	}
 	delete[] arguments;

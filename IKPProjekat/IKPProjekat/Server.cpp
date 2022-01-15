@@ -81,8 +81,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		
 		int i = 0;
 		while (token != NULL) {
-			printf(" %s\n", token); //printing each token
-			arguments[i + 1] = token;
+			printf(" %s\n", token);
+			memcpy(arguments[i + 1], token, 20);
 			token = strtok(NULL, " ");
 			i++;
 		}
@@ -93,6 +93,8 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		{
 			printf("%s\n", arguments[i]);
 		}
+		//printf("\nPOKRENI PROCESE");
+		//_getch();
 		//poziv procesa
 		int result = run_process(arguments, matrix_size);
 
@@ -111,18 +113,15 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 			printf("Some error occupied \n");
 		}
 		//printf("Deq elemenata = : %d \n", Counter(head));
-		
+
+		//printf("\nDEALOCIRAJ OSTALO");
+		//_getch();
 		free(deq->data);
 		deq->data = NULL;
 		free(deq);
 		deq = NULL;
 		delete[] niz;
 		niz = NULL;
-		/*for (int i = 0; i < matrix_size * matrix_size + 2; i++)
-		{
-			delete[] arguments[i];
-		}
-		delete[] arguments;*/
 	}
 }
 #pragma endregion
