@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 
 	for (int i = 1; i < argc; i++)
 	{
-		niz[i - 1] = atof(argv[i]);
+		niz[i - 1] = atoi(argv[i]);
 		printf("%d ", niz[i - 1]);
 	}
 	//printf("\nPARAMETRI: %s", **argv);

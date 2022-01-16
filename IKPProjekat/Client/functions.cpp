@@ -114,7 +114,6 @@ int run_stres_test(SOCKET connectSocket)
 
 
 
-
 	char* sendingBuffer;
 	int result = 0;
 	// petlja koja salje zahteve serveru
@@ -189,7 +188,7 @@ int run_stres_test(SOCKET connectSocket)
 				printf("\n Result %s\n", recBuffer[counter]);
 				memset(dataBuffer, 0, BUFFER_SIZE);
 
-				if (counter++ == times)
+				if (++counter == times)
 					break;
 			}
 		}

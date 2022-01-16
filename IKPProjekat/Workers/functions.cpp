@@ -69,6 +69,12 @@ int calculate_determinant(int** matrix, int matrix_size)
 
 	int znak = 1;
 
+	//ako je matrica 1x1, vracamo njen jedini element
+	if (matrix_size == 1)
+	{
+		result = matrix[0][0];
+		return result;
+	}
 	// ako je matrica 2x2, racunamo po standardnoj formuli za taj slucaj
 	if (matrix_size == 2)
 	{
