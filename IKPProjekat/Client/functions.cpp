@@ -65,6 +65,7 @@ char* input_matrix(int size)
 
 char* generate_random_matrix(int size)
 {
+	srand(time(0));
 	char stringSize[3];
 	char dataBuffer[BUFFER_SIZE];
 	char* retBuffer = (char*)malloc(BUFFER_SIZE);
@@ -121,7 +122,7 @@ int run_stres_test(SOCKET connectSocket)
 	int times = 5;
 	for (int i = 0; i < times; i++)
 	{
-		int size = rand() % 5 + 2;
+		int size = rand()% 7 + 2;
 		Sleep(200);
 		sendingBuffer = generate_random_matrix(size);
 		iResult = send(connectSocket, (char*)sendingBuffer, strlen(sendingBuffer), 0);
@@ -154,6 +155,11 @@ int run_stres_test(SOCKET connectSocket)
 	int counter = 0;
 	// vrtim se stalno i cekam da primim poruku
 	//uspavljujemo nit samo da moze lepo da se ispise na konzoli
+	char** recBuffer = new char* [times];
+	for (size_t i = 0; i < times; i++)
+	{
+		recBuffer[i] = new char[20];
+	}
 	while (true) {
 		FD_ZERO(&readfds);
 		FD_SET(connectSocket, &readfds);
@@ -173,22 +179,26 @@ int run_stres_test(SOCKET connectSocket)
 			continue;
 		}
 		else {
-			iResult = recv(connectSocket, dataBuffer, BUFFER_SIZE, 0);
+			iResult = recv(connectSocket, recBuffer[counter], BUFFER_SIZE, 0);
 
 			if (iResult > 0)
 			{
-				if (++counter == 2)
-					break;
-				dataBuffer[iResult] = '\0';
+				
+				recBuffer[counter][iResult] = '\0';
 
-				Sleep(200);
-				printf("\n Result %s\n", dataBuffer);
+				printf("\n Result %s\n", recBuffer[counter]);
 				memset(dataBuffer, 0, BUFFER_SIZE);
 
-
+				if (counter++ == times)
+					break;
 			}
 		}
 	}
+	for (size_t i = 0; i < times; i++)
+	{
+		delete[] recBuffer[i];
+	}
+	delete[] recBuffer;
 	mode = 0;
 	if (ioctlsocket(connectSocket, FIONBIO, &mode) != 0)
 		printf("ioctlsocket failed with error.");

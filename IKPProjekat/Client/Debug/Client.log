@@ -1,1 +1,7 @@
-﻿
+﻿  functions.cpp
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(32,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(68,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(74,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(159,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Client\functions.cpp(197,23): warning C4018: '<': signed/unsigned mismatch
+  Client.vcxproj -> C:\Users\TUF\Desktop\ProjektiSemestar1\IKPProjekat\IKP_PR44_76_2018\IKPProjekat\Debug\Client.exe

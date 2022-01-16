@@ -81,18 +81,19 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 		
 		int i = 0;
 		while (token != NULL) {
-			printf(" %s\n", token);
+			//printf(" %s\n", token);
 			memcpy(arguments[i + 1], token, 20);
 			token = strtok(NULL, " ");
 			i++;
 		}
 		arguments[matrix_size * matrix_size + 1] = NULL;
 		//printf("\nPARAMS: %s", params); 
-		//printf("\nARGS: ");
+		printf("\nARGS: ");
 		for (int i = 0; i < matrix_size * matrix_size + 1; i++)
 		{
-			printf("%s\n", arguments[i]);
+			printf("%s ", arguments[i]);
 		}
+		printf("\n");
 		//printf("\nPOKRENI PROCESE");
 		//_getch();
 		//poziv procesa

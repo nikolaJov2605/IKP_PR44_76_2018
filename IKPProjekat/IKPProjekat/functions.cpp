@@ -6,7 +6,7 @@ int SendResultToClient(char* data, int num, SOCKET clientSocket) {
 	SOCKET connectSocket = clientSocket;
 
 	int iResult;
-
+	Sleep(300);
 	if (connectSocket == INVALID_SOCKET)
 	{
 		printf("socket failed with error: %ld\n", WSAGetLastError());
